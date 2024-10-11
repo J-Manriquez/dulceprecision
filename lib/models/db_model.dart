@@ -1,487 +1,322 @@
-// 1 -----------------------------------------------------------------------------
-class Usuario {
-  final String rut; // RUT del usuario
-  final String pnombre; // Primer nombre
-  final String snombre; // Segundo nombre
-  final String papellido; // Primer apellido
-  final String sapellido; // Segundo apellido
-  final String alias; // Alias
-  final String genero; // Género
-  final String altura; // Altura
-  final String peso; // Peso
-  final String imc; // Índice de Masa Corporal
-  final String tipo_sangre; // Tipo de sangre
-  final String fecha_nacimiento; // Fecha de nacimiento
-  final String alergias; // Alergias
-  final String cronico; // Enfermedades crónicas
-  final String donante; // Donante de órganos
-  final String limitacion_fisica; // Limitaciones físicas
-  final String toma_medicamentos; // Toma de medicamentos
+class Producto {
+  final int? idProducto; // Puede ser null al crear un nuevo producto
+  final String nombreProducto;
+  final double precioProducto;
+  final double cantidadProducto;
+  final String tipoUnidadProducto;
+  final double cantidadUnidadesProducto;
 
   // Constructor
-  Usuario({
-    required this.rut,
-    required this.pnombre,
-    required this.snombre,
-    required this.papellido,
-    required this.sapellido,
-    required this.alias,
-    required this.genero,
-    required this.altura,
-    required this.peso,
-    required this.imc,
-    required this.tipo_sangre,
-    required this.fecha_nacimiento,
-    required this.alergias,
-    required this.cronico,
-    required this.donante,
-    required this.limitacion_fisica,
-    required this.toma_medicamentos,
+  Producto({
+    this.idProducto,
+    required this.nombreProducto,
+    required this.precioProducto,
+    required this.cantidadProducto,
+    required this.tipoUnidadProducto,
+    required this.cantidadUnidadesProducto,
   });
 
-  // Método para convertir un objeto Usuario a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'rut': rut,
-      'pnombre': pnombre,
-      'snombre': snombre,
-      'papellido': papellido,
-      'sapellido': sapellido,
-      'alias': alias,
-      'genero': genero,
-      'altura': altura,
-      'peso': peso,
-      'imc': imc,
-      'tipo_sangre': tipo_sangre,
-      'fecha_nacimiento': fecha_nacimiento,
-      'alergias': alergias,
-      'cronico': cronico,
-      'donante': donante,
-      'limitacion_fisica': limitacion_fisica,
-      'toma_medicamentos': toma_medicamentos,
+      'idProducto': idProducto,
+      'nombreProducto': nombreProducto,
+      'precioProducto': precioProducto,
+      'cantidadProducto': cantidadProducto,
+      'tipoUnidadProducto': tipoUnidadProducto,
+      'cantidadUnidadesProducto': cantidadUnidadesProducto,
     };
   }
 
-  // Método para convertir un mapa a un objeto Usuario (opcional)
-  static Usuario fromMap(Map<String, dynamic> map) {
-    return Usuario(
-      rut: map['rut'],
-      pnombre: map['pnombre'],
-      snombre: map['snombre'],
-      papellido: map['papellido'],
-      sapellido: map['sapellido'],
-      alias: map['alias'],
-      genero: map['genero'],
-      altura: map['altura'],
-      peso: map['peso'],
-      imc: map['imc'],
-      tipo_sangre: map['tipo_sangre'],
-      fecha_nacimiento: map['fecha_nacimiento'],
-      alergias: map['alergias'],
-      cronico: map['cronico'],
-      donante: map['donante'],
-      limitacion_fisica: map['limitacion_fisica'],
-      toma_medicamentos: map['toma_medicamentos'],
+  // Método para convertir un mapa en un objeto Producto
+  factory Producto.fromMap(Map<String, dynamic> map) {
+    return Producto(
+      idProducto: map['idProducto'],
+      nombreProducto: map['nombreProducto'],
+      precioProducto: map['precioProducto'],
+      cantidadProducto: map['cantidadProducto'],
+      tipoUnidadProducto: map['tipoUnidadProducto'],
+      cantidadUnidadesProducto: map['cantidadUnidadesProducto'],
     );
   }
 }
 
-// 2 -----------------------------------------------------------------------------
-class DolenciaSintoma {
-  final int idDolencia; // ID de la dolencia
-  final String dolenciaSintoma; // Nombre del síntoma
-  final String fechaHoraActual; // Fecha y hora de la consulta
-  final String descripcion; // Descripción del síntoma
-  final String parteCuerpoAfectada; // Parte del cuerpo afectada
-  final String?
-      tiempoDesdeAparicion; // Tiempo desde que apareció el síntoma (opcional)
-  final String nivelDolor; // Nivel de dolor
-  final String usuarioRut; // RUT del usuario que presenta la dolencia
+
+
+
+class Receta {
+  final int? idReceta;
+  final String nombreReceta;
+  final String? descripcionReceta; // Puede ser null
+  final double? precioReceta; // Puede ser null
 
   // Constructor
-  DolenciaSintoma({
-    required this.idDolencia,
-    required this.dolenciaSintoma,
-    required this.fechaHoraActual,
-    required this.descripcion,
-    required this.parteCuerpoAfectada,
-    this.tiempoDesdeAparicion,
-    required this.nivelDolor,
-    required this.usuarioRut,
+  Receta({
+    this.idReceta,
+    required this.nombreReceta,
+    this.descripcionReceta,
+    this.precioReceta,
   });
 
-  // Método para convertir un objeto DolenciaSintoma a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id_dolencia': idDolencia,
-      'dolenciaSintoma': dolenciaSintoma,
-      'fechaHoraActual': fechaHoraActual,
-      'descripcion': descripcion,
-      'parteCuerpoAfectada': parteCuerpoAfectada,
-      'tiempoDesdeAparicion': tiempoDesdeAparicion,
-      'nivelDolor': nivelDolor,
-      'usuario_rut': usuarioRut,
+      'idReceta': idReceta,
+      'nombreReceta': nombreReceta,
+      'descripcionReceta': descripcionReceta,
+      'precioReceta': precioReceta,
     };
   }
 
-  // Método para convertir un mapa a un objeto DolenciaSintoma
-  static DolenciaSintoma fromMap(Map<String, dynamic> map) {
-    return DolenciaSintoma(
-      idDolencia: map['id_dolencia'],
-      dolenciaSintoma: map['dolenciaSintoma'],
-      fechaHoraActual: map['fechaHoraActual'],
-      descripcion: map['descripcion'],
-      parteCuerpoAfectada: map['parteCuerpoAfectada'],
-      tiempoDesdeAparicion: map['tiempoDesdeAparicion'],
-      nivelDolor: map['nivelDolor'],
-      usuarioRut: map['usuario_rut'],
+  // Método para convertir un mapa en un objeto Receta
+  factory Receta.fromMap(Map<String, dynamic> map) {
+    return Receta(
+      idReceta: map['idReceta'],
+      nombreReceta: map['nombreReceta'],
+      descripcionReceta: map['descripcionReceta'],
+      precioReceta: map['precioReceta'],
     );
   }
 }
 
-// 3 -----------------------------------------------------------------------------
-class DolenciaMedicamento {
-  final int id; // ID del medicamento
-  final String? nombreMedicamento; // Nombre del medicamento (opcional)
-  final String? dosis; // Dosis del medicamento (opcional)
-  final int dolenciaId; // ID de la dolencia asociada
+
+
+
+class IngredienteReceta {
+  final int? idIngrediente;
+  final String nombreIngrediente;
+  final double costoIngrediente;
+  final double cantidadIngrediente;
+  final String tipoUnidadIngrediente;
+  final int idReceta; // Relacionado con la tabla Recetas
 
   // Constructor
-  DolenciaMedicamento({
-    required this.id,
-    this.nombreMedicamento,
-    this.dosis,
-    required this.dolenciaId,
+  IngredienteReceta({
+    this.idIngrediente,
+    required this.nombreIngrediente,
+    required this.costoIngrediente,
+    required this.cantidadIngrediente,
+    required this.tipoUnidadIngrediente,
+    required this.idReceta,
   });
 
-  // Método para convertir un objeto DolenciaMedicamento a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'nombreMedicamento': nombreMedicamento,
-      'dosis': dosis,
-      'dolencia_id': dolenciaId,
+      'idIngrediente': idIngrediente,
+      'nombreIngrediente': nombreIngrediente,
+      'costoIngrediente': costoIngrediente,
+      'cantidadIngrediente': cantidadIngrediente,
+      'tipoUnidadIngrediente': tipoUnidadIngrediente,
+      'idReceta': idReceta,
     };
   }
 
-  // Método para convertir un mapa a un objeto DolenciaMedicamento
-  static DolenciaMedicamento fromMap(Map<String, dynamic> map) {
-    return DolenciaMedicamento(
-      id: map['id'],
-      nombreMedicamento: map['nombreMedicamento'],
-      dosis: map['dosis'],
-      dolenciaId: map['dolencia_id'],
+  // Método para convertir un mapa en un objeto IngredienteReceta
+  factory IngredienteReceta.fromMap(Map<String, dynamic> map) {
+    return IngredienteReceta(
+      idIngrediente: map['idIngrediente'],
+      nombreIngrediente: map['nombreIngrediente'],
+      costoIngrediente: map['costoIngrediente'],
+      cantidadIngrediente: map['cantidadIngrediente'],
+      tipoUnidadIngrediente: map['tipoUnidadIngrediente'],
+      idReceta: map['idReceta'],
     );
   }
 }
 
-// 4 -----------------------------------------------------------------------------
-class Medicamento {
-  final int id;
-  final String medicamento;
-  final String dosis;
-  final String periodicidad;
-  final String horarios;
-  final String estadoNotificacion;
-  final String usuarioRut;
 
-  Medicamento({
-    required this.id,
-    required this.medicamento,
-    required this.dosis,
-    required this.periodicidad,
-    required this.horarios,
-    required this.estadoNotificacion,
-    required this.usuarioRut,
+
+
+class GastoFijo {
+  final int? idGF;
+  final String nombreGF;
+  final double valorGF;
+
+  // Constructor
+  GastoFijo({
+    this.idGF,
+    required this.nombreGF,
+    required this.valorGF,
   });
 
-  // Conversión de un mapa a un objeto Medicamento
-  factory Medicamento.fromMap(Map<String, dynamic> map) {
-    return Medicamento(
-      id: map['id'],
-      medicamento: map['medicamento'],
-      dosis: map['dosis'],
-      periodicidad: map['periodicidad'],
-      horarios: map['horarios'],
-      estadoNotificacion: map['estadoNotificacion'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
-
-  // Conversión de un objeto Medicamento a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'medicamento': medicamento,
-      'dosis': dosis,
-      'periodicidad': periodicidad,
-      'horarios': horarios,
-      'estadoNotificacion': estadoNotificacion,
-      'usuario_rut': usuarioRut,
+      'idGF': idGF,
+      'nombreGF': nombreGF,
+      'valorGF': valorGF,
     };
+  }
+
+  // Método para convertir un mapa en un objeto GastoFijo
+  factory GastoFijo.fromMap(Map<String, dynamic> map) {
+    return GastoFijo(
+      idGF: map['idGF'],
+      nombreGF: map['nombreGF'],
+      valorGF: map['valorGF'],
+    );
   }
 }
 
-// 5 -----------------------------------------------------------------------------
-class Alergia {
-  final int id;
-  final String tipo;
-  final String alergeno;
-  final String usuarioRut;
 
-  Alergia({
-    required this.id,
-    required this.tipo,
-    required this.alergeno,
-    required this.usuarioRut,
+
+
+
+
+class Venta {
+  final int? idVenta;
+  final String nombreVenta;
+  final String horaVenta;
+  final String fechaVenta;
+  final int productoVenta; // Relacionado con la tabla Productos
+  final double cantidadVenta;
+  final double pctjGFVenta;
+  final String desgloseGFVenta;
+  final double precioGFVenta;
+  final double precioRecetaVenta;
+  final double pctjGananciaVenta;
+  final double precioPorProductoVenta;
+
+  // Constructor
+  Venta({
+    this.idVenta,
+    required this.nombreVenta,
+    required this.horaVenta,
+    required this.fechaVenta,
+    required this.productoVenta,
+    required this.cantidadVenta,
+    required this.pctjGFVenta,
+    required this.desgloseGFVenta,
+    required this.precioGFVenta,
+    required this.precioRecetaVenta,
+    required this.pctjGananciaVenta,
+    required this.precioPorProductoVenta,
   });
 
-  // Conversión de un mapa a un objeto Alergia
-  factory Alergia.fromMap(Map<String, dynamic> map) {
-    return Alergia(
-      id: map['id'],
-      tipo: map['tipo'],
-      alergeno: map['alergeno'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
-
-  // Conversión de un objeto Alergia a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'tipo': tipo,
-      'alergeno': alergeno,
-      'usuario_rut': usuarioRut,
+      'idVenta': idVenta,
+      'nombreVenta': nombreVenta,
+      'horaVenta': horaVenta,
+      'fechaVenta': fechaVenta,
+      'productoVenta': productoVenta,
+      'cantidadVenta': cantidadVenta,
+      'pctjGFVenta': pctjGFVenta,
+      'desgloseGFVenta': desgloseGFVenta,
+      'precioGFVenta': precioGFVenta,
+      'precioRecetaVenta': precioRecetaVenta,
+      'pctjGananciaVenta': pctjGananciaVenta,
+      'precioPorProductoVenta': precioPorProductoVenta,
     };
+  }
+
+  // Método para convertir un mapa en un objeto Venta
+  factory Venta.fromMap(Map<String, dynamic> map) {
+    return Venta(
+      idVenta: map['idVenta'],
+      nombreVenta: map['nombreVenta'],
+      horaVenta: map['horaVenta'],
+      fechaVenta: map['fechaVenta'],
+      productoVenta: map['productoVenta'],
+      cantidadVenta: map['cantidadVenta'],
+      pctjGFVenta: map['pctjGFVenta'],
+      desgloseGFVenta: map['desgloseGFVenta'],
+      precioGFVenta: map['precioGFVenta'],
+      precioRecetaVenta: map['precioRecetaVenta'],
+      pctjGananciaVenta: map['pctjGananciaVenta'],
+      precioPorProductoVenta: map['precioPorProductoVenta'],
+    );
   }
 }
 
-// 6 -----------------------------------------------------------------------------
-class PatologiaCronica {
-  final int id;
-  final String tipoPatologia;
-  final String nombrePatologia;
-  final String transmisibilidad;
-  final String morbilidadIntensidad;
-  final String usuarioRut;
 
-  PatologiaCronica({
-    required this.id,
-    required this.tipoPatologia,
-    required this.nombrePatologia,
-    required this.transmisibilidad,
-    required this.morbilidadIntensidad,
-    required this.usuarioRut,
+
+
+class HistorialProducto {
+  final int? idHistorialProducto;
+  final double antesHP;
+  final double despuesHP;
+  final String fechaHP;
+  final String horaHP;
+
+  // Constructor
+  HistorialProducto({
+    this.idHistorialProducto,
+    required this.antesHP,
+    required this.despuesHP,
+    required this.fechaHP,
+    required this.horaHP,
   });
 
-  // Conversión de un mapa a un objeto PatologiaCronica
-  factory PatologiaCronica.fromMap(Map<String, dynamic> map) {
-    return PatologiaCronica(
-      id: map['id'],
-      tipoPatologia: map['tipo_patologia'],
-      nombrePatologia: map['nombre_patologia'],
-      transmisibilidad: map['transmisibilidad'],
-      morbilidadIntensidad: map['morbilidad_intensidad'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
-
-  // Conversión de un objeto PatologiaCronica a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'tipo_patologia': tipoPatologia,
-      'nombre_patologia': nombrePatologia,
-      'transmisibilidad': transmisibilidad,
-      'morbilidad_intensidad': morbilidadIntensidad,
-      'usuario_rut': usuarioRut,
+      'idHistorialProducto': idHistorialProducto,
+      'antesHP': antesHP,
+      'despuesHP': despuesHP,
+      'fechaHP': fechaHP,
+      'horaHP': horaHP,
     };
+  }
+
+  // Método para convertir un mapa en un objeto HistorialProducto
+  factory HistorialProducto.fromMap(Map<String, dynamic> map) {
+    return HistorialProducto(
+      idHistorialProducto: map['idHistorialProducto'],
+      antesHP: map['antesHP'],
+      despuesHP: map['despuesHP'],
+      fechaHP: map['fechaHP'],
+      horaHP: map['horaHP'],
+    );
   }
 }
 
-// 7 -----------------------------------------------------------------------------
-class Limitacion {
-  final int id;
-  final String tipoLim;
-  final String severidadLim;
-  final String origenLim;
-  final String descripcionLim;
-  final String usuarioRut;
 
-  Limitacion({
-    required this.id,
-    required this.tipoLim,
-    required this.severidadLim,
-    required this.origenLim,
-    required this.descripcionLim,
-    required this.usuarioRut,
+
+
+class HistorialGF {
+  final int? idHistorialGF;
+  final double antesHGF;
+  final double despuesHGF;
+  final String fechaHGF;
+  final String horaHGF;
+
+  // Constructor
+  HistorialGF({
+    this.idHistorialGF,
+    required this.antesHGF,
+    required this.despuesHGF,
+    required this.fechaHGF,
+    required this.horaHGF,
   });
 
-  // Conversión de un mapa a un objeto Limitacion
-  factory Limitacion.fromMap(Map<String, dynamic> map) {
-    return Limitacion(
-      id: map['id'],
-      tipoLim: map['tipo_lim'],
-      severidadLim: map['severidad_lim'],
-      origenLim: map['origen_lim'],
-      descripcionLim: map['descripcion_lim'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
-
-  // Conversión de un objeto Limitacion a un mapa
+  // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'tipo_lim': tipoLim,
-      'severidad_lim': severidadLim,
-      'origen_lim': origenLim,
-      'descripcion_lim': descripcionLim,
-      'usuario_rut': usuarioRut,
+      'idHistorialGF': idHistorialGF,
+      'antesHGF': antesHGF,
+      'despuesHGF': despuesHGF,
+      'fechaHGF': fechaHGF,
+      'horaHGF': horaHGF,
     };
+  }
+
+  // Método para convertir un mapa en un objeto HistorialGF
+  factory HistorialGF.fromMap(Map<String, dynamic> map) {
+    return HistorialGF(
+      idHistorialGF: map['idHistorialGF'],
+      antesHGF: map['antesHGF'],
+      despuesHGF: map['despuesHGF'],
+      fechaHGF: map['fechaHGF'],
+      horaHGF: map['horaHGF'],
+    );
   }
 }
 
-// 8 -----------------------------------------------------------------------------
-class HistorialChat {
-  final String id;
-  final String fechaHora;
-  final String funcionReconocida;
-  final String input;
-  final String output;
-  final String usuarioRut;
 
-  HistorialChat({
-    required this.id,
-    required this.fechaHora,
-    required this.funcionReconocida,
-    required this.input,
-    required this.output,
-    required this.usuarioRut,
-  });
 
-  // Conversión de un mapa a un objeto HistorialChat
-  factory HistorialChat.fromMap(Map<String, dynamic> map) {
-    return HistorialChat(
-      id: map['id'],
-      fechaHora: map['fecha_hora'],
-      funcionReconocida: map['funcion_reconocida'],
-      input: map['input'],
-      output: map['output'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
 
-  // Conversión de un objeto HistorialChat a un mapa
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'fecha_hora': fechaHora,
-      'funcion_reconocida': funcionReconocida,
-      'input': input,
-      'output': output,
-      'usuario_rut': usuarioRut,
-    };
-  }
-}
 
-// 9 -----------------------------------------------------------------------------
-class Contacto {
-  final int id;
-  final String nombreCompleto;
-  final String alias;
-  final String numero;
-  final String relacion;
-  final String estadoContacto;
-  final String usuarioRut;
 
-  Contacto({
-    required this.id,
-    required this.nombreCompleto,
-    required this.alias,
-    required this.numero,
-    required this.relacion,
-    required this.estadoContacto,
-    required this.usuarioRut,
-  });
-
-  // Conversión de un mapa a un objeto Contacto
-  factory Contacto.fromMap(Map<String, dynamic> map) {
-    return Contacto(
-      id: map['id'],
-      nombreCompleto: map['nombreCompleto'],
-      alias: map['alias'],
-      numero: map['numero'],
-      relacion: map['relacion'],
-      estadoContacto: map['estadoContacto'],
-      usuarioRut: map['usuario_rut'],
-    );
-  }
-
-  // Conversión de un objeto Contacto a un mapa
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nombreCompleto': nombreCompleto,
-      'alias': alias,
-      'numero': numero,
-      'relacion': relacion,
-      'estadoContacto': estadoContacto,
-      'usuario_rut': usuarioRut,
-    };
-  }
-}
-
-// 10 -----------------------------------------------------------------------------
-class CentroMedico {
-  final String id;
-  final String region;
-  final String nombreOficial;
-  final String comuna;
-  final String direccion;
-  final String? telefono; // Telefono es opcional (nullable)
-  final String actualizadoAl;
-
-  CentroMedico({
-    required this.id,
-    required this.region,
-    required this.nombreOficial,
-    required this.comuna,
-    required this.direccion,
-    this.telefono, // Es nullable
-    required this.actualizadoAl,
-  });
-
-  // Conversión de un mapa a un objeto CentroMedico
-  factory CentroMedico.fromMap(Map<String, dynamic> map) {
-    return CentroMedico(
-      id: map['id'],
-      region: map['Region'],
-      nombreOficial: map['Nombre_Oficial'],
-      comuna: map['Comuna'],
-      direccion: map['Direccion'],
-      telefono: map['Telefono'],
-      actualizadoAl: map['Actualizado_al'],
-    );
-  }
-
-  // Conversión de un objeto CentroMedico a un mapa
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'Region': region,
-      'Nombre_Oficial': nombreOficial,
-      'Comuna': comuna,
-      'Direccion': direccion,
-      'Telefono': telefono,
-      'Actualizado_al': actualizadoAl,
-    };
-  }
-}
-
-// 11 -----------------------------------------------------------------------------
-// 12 -----------------------------------------------------------------------------
-// 13 -----------------------------------------------------------------------------
-// 14 -----------------------------------------------------------------------------
-// 15 -----------------------------------------------------------------------------

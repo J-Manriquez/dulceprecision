@@ -1,6 +1,8 @@
-import 'package:DulcePrecision/screens/recetas_screen.dart';
+import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
-import 'package:DulcePrecision/screens/productos_screen.dart';
+import 'package:DulcePrecision/screens/productos/productos_screen.dart';
+import 'package:DulcePrecision/utils/productos_provider.dart';
+import 'package:DulcePrecision/utils/recetas_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/theme_model.dart'; // Importa el modelo de tema
@@ -8,6 +10,7 @@ import 'models/font_size_model.dart'; // Importa el modelo de tamaños de fuente
 // import 'services/db_adam.dart'; // Importa DatabaseHelper
 import 'screens/home_screen.dart'; // Importa la pantalla principal de inicio
 import 'utils/custom_logger.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,8 +24,13 @@ void main() async {
           create: (context) => ThemeModel(), // Proveedor de colores
         ),
         ChangeNotifierProvider(
-          create: (context) => FontSizeModel(), // Proveedor de tamaños de fuente
+          create: (context) =>
+              FontSizeModel(), // Proveedor de tamaños de fuente
         ),
+        ChangeNotifierProvider(
+            create: (_) => ProductosProvider()), // Proveer ProductosProvider
+        ChangeNotifierProvider(
+            create: (_) => RecetasProvider()),
       ],
       child: MyApp(),
     ),
@@ -67,9 +75,9 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pages.addAll([
-      const ProductosScreen(),
+      ProductosScreen(),
       const HomeScreen(),
-      const RecetasScreen(),
+      RecetasScreen(),
     ]);
   }
 
@@ -104,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
         title: Text(
-          'Dlce Precisión',
+          'Dulce Precisión',
           style: TextStyle(
             fontSize:
                 fontSizeModel.titleSize, // Tamaño dinámico del texto del título
@@ -203,19 +211,19 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.warning,
+            icon: Icon(Icons.add_business,
                 size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'SOS',
+            label: 'Productos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home,
+            icon: Icon(Icons.show_chart,
                 size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'Inicio',
+            label: 'Ventas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications,
+            icon: Icon(Icons.restaurant,
                 size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'Recordatorios',
+            label: 'Recetas',
           ),
         ],
         currentIndex: _selectedIndex, // Índice seleccionado
