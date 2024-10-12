@@ -1,3 +1,4 @@
+import 'package:DulcePrecision/database/dp_db.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
@@ -7,15 +8,42 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/theme_model.dart'; // Importa el modelo de tema
 import 'models/font_size_model.dart'; // Importa el modelo de tamaños de fuente
-// import 'services/db_adam.dart'; // Importa DatabaseHelper
 import 'screens/home_screen.dart'; // Importa la pantalla principal de inicio
 import 'utils/custom_logger.dart';
+import 'package:DulcePrecision/database/metodos/metodos_db_dp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializamos la base de datos
-  // await DatabaseHelper().database; // Aquí se llama a la base de datos que se inicializa de acuerdo al entorno
+  try {
+    CustomLogger().logInfo('Intento de abrir la base de datos y crear tablas');
+    // Inicializamos la base de datos
+    DatabaseHelper databaseHelper =
+        DatabaseHelper(); // Aquí se llama a la base de datos que se inicializa de acuerdo al entorno
+    await databaseHelper
+        .database; // Asegura que la base de datos esté inicializada
+  } catch (e) {
+    CustomLogger().logError('Error al inicializar la base de datos: $e');
+    rethrow; // Asegúrate de lanzar la excepción nuevamente para que pueda ser manejada arriba
+  }
+
+
+  // Instancia de MetodosRepository
+  MetodosRepository metodosRepository = MetodosRepository();
+  // Llama a deleteDatabase sin argumentos
+  // await metodosRepository.eliminarDatabase();
+
+  // Ejemplo de eliminación de todas las tablas al iniciar la app
+  //  await metodosRepository.deleteAllTables();
+
+  // O para eliminar una tabla específica, por ejemplo 'ventas'
+  // await metodosRepository.deleteTable('ventas');
+
+  //Listar las tablas existentes
+  await metodosRepository.listTables();
+
+  // mostrar el contenido de una tabla en especifico
+  await metodosRepository.getTableContent('ventas');
 
   runApp(
     MultiProvider(
@@ -29,8 +57,7 @@ void main() async {
         ),
         ChangeNotifierProvider(
             create: (_) => ProductosProvider()), // Proveer ProductosProvider
-        ChangeNotifierProvider(
-            create: (_) => RecetasProvider()),
+        ChangeNotifierProvider(create: (_) => RecetasProvider()),
       ],
       child: MyApp(),
     ),
