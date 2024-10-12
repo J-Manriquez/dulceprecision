@@ -23,16 +23,23 @@ class IngredientesRecetasProvider with ChangeNotifier {
   }
 
   // Método para agregar un ingrediente
-  Future<void> agregarIngrediente(IngredienteReceta ingrediente) async {
-    try {
-      await _ingredienteRepository.insertIngrediente(ingrediente); // Inserta ingrediente
-      await obtenerIngredientesPorReceta(ingrediente.idReceta); // Actualiza la lista después de insertar
-    } catch (e) {
-      // Registro de errores usando CustomLogger
-      CustomLogger().logError('Error al agregar ingrediente: $e');
-      throw Exception("Error al agregar ingrediente"); // Lanzamos una excepción para manejo externo
-    }
+Future<void> agregarIngrediente(IngredienteReceta ingrediente) async {
+  try {
+    // Creamos una lista con el ingrediente que queremos agregar
+    List<IngredienteReceta> ingredientesLista = [ingrediente];
+
+    // Llamamos a insertarIngredientes, pasando la lista y el idReceta
+    await _ingredienteRepository.insertarIngredientes(ingredientesLista, ingrediente.idReceta);
+    
+    // Actualiza la lista después de insertar
+    await obtenerIngredientesPorReceta(ingrediente.idReceta); 
+  } catch (e) {
+    // Registro de errores usando CustomLogger
+    CustomLogger().logError('Error al agregar ingrediente: $e');
+    throw Exception("Error al agregar ingrediente"); // Lanzamos una excepción para manejo externo
   }
+}
+
 
   // Método para eliminar un ingrediente
 Future<void> eliminarIngrediente(int idIngrediente) async {

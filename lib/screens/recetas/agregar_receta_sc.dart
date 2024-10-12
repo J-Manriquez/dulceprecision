@@ -1,3 +1,4 @@
+import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
 import 'package:DulcePrecision/widgets/agregar_ingrediente_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:DulcePrecision/database/metodos/recetas_metodos.dart'; // Importamos el repositorio
@@ -20,7 +21,11 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
   // Controladores para los campos del formulario
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-  final TextEditingController _precioController = TextEditingController(); // Este se mantiene por si se necesita en el futuro
+  final TextEditingController _costoController =
+      TextEditingController(); // Este se mantiene por si se necesita en el futuro
+
+  final GlobalKey<AgregarIngredientesWidgetState> _ingredientesKey =
+      GlobalKey();
 
   @override
   void initState() {
@@ -29,17 +34,18 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       // Si se está editando, se llenan los campos con los datos de la receta
       _nombreController.text = widget.receta!.nombreReceta;
       _descripcionController.text = widget.receta!.descripcionReceta!;
-      _precioController.text = widget.receta!.precioReceta.toString(); // Esto puede no ser necesario mostrarlo.
+      _costoController.text = widget.receta!.costoReceta
+          .toString(); // Esto puede no ser necesario mostrarlo.
     }
   }
 
   // Método para insertar o actualizar una receta en la base de datos
   Future<void> _guardarReceta() async {
     final recetaRepo = RecetaRepository();
+    final ingredienteRepo = IngredienteRecetaRepository();
 
     // Validamos los campos antes de intentar guardar
-    if (_nombreController.text.isEmpty ||
-        _descripcionController.text.isEmpty) {
+    if (_nombreController.text.isEmpty || _descripcionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Por favor, completa todos los campos.')),
       );
@@ -48,35 +54,52 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
 
     // Creamos una nueva receta con los datos del formulario
     final receta = Receta(
-      idReceta: widget.receta?.idReceta, // Usar ID si se está editando
+      idReceta: widget.receta?.idReceta,
       nombreReceta: _nombreController.text,
       descripcionReceta: _descripcionController.text,
-      precioReceta: 0.0, // Asignamos un precio por defecto de 0.0
+      costoReceta: 0.0,
     );
 
     try {
+      int id;
       if (widget.receta == null) {
-        // Si no hay receta, la insertamos
-        int id = await recetaRepo.insertReceta(receta);
-        print("Receta insertada con ID: $id");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Receta insertada con éxito!')),
-        );
+        // Si es una nueva receta, insertamos y obtenemos el id
+        id = await recetaRepo.insertReceta(receta);
       } else {
-        // Si hay receta, la actualizamos
+        // Si es una receta existente, la actualizamos
         await recetaRepo.actualizarReceta(receta);
-        print("Receta actualizada con ID: ${receta.idReceta}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Receta actualizada con éxito!')),
-        );
+        id = receta.idReceta!; // Asegúrate de que idReceta no sea null
       }
+
+      // Guardar ingredientes
+      // Convertimos la lista de ingredientes a una lista de objetos IngredienteReceta
+      final ingredientes =
+          _ingredientesKey.currentState?.obtenerIngredientes() ?? [];
+
+      // Convert ingredients to IngredienteReceta objects
+      List<IngredienteReceta> listaIngredientes =
+          ingredientes.map((ingredienteMap) {
+        return IngredienteReceta(
+          nombreIngrediente: ingredienteMap['nombre'],
+          costoIngrediente:
+              0, // You might want to add a field for this in AgregarIngredientesWidget
+          cantidadIngrediente: double.parse(ingredienteMap['cantidad']),
+          tipoUnidadIngrediente: ingredienteMap['tipoUnidad'],
+          idReceta: id,
+        );
+      }).toList();
+
+      // Llamamos a la función para insertar todos los ingredientes
+      await ingredienteRepo.insertarIngredientes(listaIngredientes, id);
 
       // Limpiamos los campos del formulario
       _nombreController.clear();
       _descripcionController.clear();
-      _precioController.clear(); // Esto puede no ser necesario en el futuro
+      _ingredientesKey.currentState?.limpiarIngredientes();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Receta guardada con éxito'))
+      );
     } catch (e) {
-      // En caso de error, mostramos un mensaje
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar la receta: $e')),
       );
@@ -92,7 +115,9 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.receta == null ? 'Insertar Receta' : 'Editar Receta', // Cambiar el título
+          widget.receta == null
+              ? 'Insertar Receta'
+              : 'Editar Receta', // Cambiar el título
           style: TextStyle(
             fontSize: fontSizeModel.titleSize,
             color: themeModel.primaryTextColor,
@@ -100,7 +125,7 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
         ),
         backgroundColor: themeModel.primaryButtonColor,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -119,12 +144,13 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
               ),
             ),
             SizedBox(height: 20), // Espacio entre el nombre y los ingredientes
-            
+
             // Widget para añadir ingredientes
-            AgregarIngredientesWidget(), // Aquí se añade el widget de ingredientes
-            
-            SizedBox(height: 20), // Espacio entre los ingredientes y la descripción
-            
+            AgregarIngredientesWidget(key: _ingredientesKey), // Aquí se añade el widget de ingredientes
+
+            SizedBox(
+                height: 20), // Espacio entre los ingredientes y la descripción
+
             // Campo para la descripción
             TextField(
               controller: _descripcionController,
@@ -141,12 +167,15 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
               ),
             ),
             SizedBox(height: 20), // Espacio antes del botón
-            
+
             // Botón para guardar la receta
             ElevatedButton(
               onPressed: _guardarReceta,
-              child: Text(widget.receta == null ? 'Añadir Receta' : 'Actualizar Receta'), // Cambiar el texto del botón
+              child: Text(widget.receta == null
+                  ? 'Añadir Receta'
+                  : 'Actualizar Receta'), // Cambiar el texto del botón
               style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 40),
                 backgroundColor: themeModel.primaryButtonColor,
                 foregroundColor: themeModel.primaryTextColor,
                 textStyle: TextStyle(

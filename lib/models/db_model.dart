@@ -48,14 +48,14 @@ class Receta {
   final int? idReceta;
   final String nombreReceta;
   final String? descripcionReceta; // Puede ser null
-  final double? precioReceta; // Puede ser null
+  final double? costoReceta; // Puede ser null
 
   // Constructor
   Receta({
     this.idReceta,
     required this.nombreReceta,
     this.descripcionReceta,
-    this.precioReceta,
+    this.costoReceta,
   });
 
   // Método para convertir el objeto en un mapa
@@ -64,7 +64,7 @@ class Receta {
       'idReceta': idReceta,
       'nombreReceta': nombreReceta,
       'descripcionReceta': descripcionReceta,
-      'precioReceta': precioReceta,
+      'costoReceta': costoReceta,
     };
   }
 
@@ -74,7 +74,7 @@ class Receta {
       idReceta: map['idReceta'],
       nombreReceta: map['nombreReceta'],
       descripcionReceta: map['descripcionReceta'],
-      precioReceta: map['precioReceta'],
+      costoReceta: map['costoReceta'],
     );
   }
 }
@@ -88,7 +88,7 @@ class IngredienteReceta {
   final double costoIngrediente;
   final double cantidadIngrediente;
   final String tipoUnidadIngrediente;
-  final int idReceta; // Relacionado con la tabla Recetas
+  int idReceta; // Relacionado con la tabla Recetas
 
   // Constructor
   IngredienteReceta({

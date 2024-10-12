@@ -138,9 +138,9 @@ class _RecetasScreenState extends State<RecetasScreen> {
                               ),
                               SizedBox(height: 4),
                             ],
-                            if (receta.precioReceta != null) ...[
+                            if (receta.costoReceta != null) ...[
                               Text(
-                                'Precio: \$${receta.precioReceta!.toStringAsFixed(2)}',
+                                'Precio: \$${receta.costoReceta!.toStringAsFixed(2)}',
                                 style: TextStyle(
                                   fontSize: fontSizeModel.textSize,
                                   color: themeModel.secondaryTextColor,

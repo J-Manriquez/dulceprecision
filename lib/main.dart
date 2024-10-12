@@ -27,23 +27,23 @@ void main() async {
     rethrow; // Asegúrate de lanzar la excepción nuevamente para que pueda ser manejada arriba
   }
 
-
   // Instancia de MetodosRepository
   MetodosRepository metodosRepository = MetodosRepository();
   // Llama a deleteDatabase sin argumentos
-  // await metodosRepository.eliminarDatabase();
+  // // ojo cuidado ;-; // //await metodosRepository.eliminarDatabase();
 
   // Ejemplo de eliminación de todas las tablas al iniciar la app
-  //  await metodosRepository.deleteAllTables();
+  // // ojo cuidado ;-; // //  await metodosRepository.deleteAllTables();
 
   // O para eliminar una tabla específica, por ejemplo 'ventas'
-  // await metodosRepository.deleteTable('ventas');
+  // // ojo cuidado ;-; // // await metodosRepository.deleteTable('ventas');
 
   //Listar las tablas existentes
-  await metodosRepository.listTables();
+  // await metodosRepository.listTables();
 
   // mostrar el contenido de una tabla en especifico
-  await metodosRepository.getTableContent('ventas');
+  await metodosRepository.getTableContent('recetas');
+  await metodosRepository.getTableContent('ingredientesRecetas');
 
   runApp(
     MultiProvider(

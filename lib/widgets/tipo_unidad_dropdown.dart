@@ -29,8 +29,7 @@ class _TipoUnidadDropdownState extends State<TipoUnidadDropdown> {
   void initState() {
     super.initState();
     // Inicializa el tipo de unidad seleccionado
-    _selectedTipo = widget.initialValue ??
-        _tiposUnidad[0]; // Usa el valor inicial o el primero de la lista
+    _selectedTipo = _tiposUnidad[4]; // Usa el valor inicial o el primero de la lista
   }
 
   @override
@@ -39,33 +38,48 @@ class _TipoUnidadDropdownState extends State<TipoUnidadDropdown> {
     final themeModel = Provider.of<ThemeModel>(context);
     final fontSizeModel = Provider.of<FontSizeModel>(context);
 
-    return DropdownButton<String>(
-      value: _selectedTipo, // Tipo de unidad seleccionado
-      icon: Icon(Icons.arrow_drop_down,
-          color: themeModel.secondaryTextColor), // Icono del dropdown
-      style: TextStyle(
-        fontSize: fontSizeModel.textSize, // Tamaño dinámico del texto
-        color: themeModel.primaryTextColor, // Color del texto dinámico
+    return Container(
+      // Envuelve el DropdownButton en un Container para personalizar el diseño
+      padding: const EdgeInsets.only(bottom: 6.5),
+      decoration: BoxDecoration(
+        border: Border(
+            bottom: BorderSide(
+          color: Colors.black.withOpacity(0.5), // Color del borde
+          width: 1.0, // Ancho del borde
+        )),
       ),
-      dropdownColor:
-          themeModel.primaryButtonColor, // Color de fondo del dropdown
-      onChanged: (String? newValue) {
-        setState(() {
-          _selectedTipo = newValue!; // Actualiza el tipo de unidad seleccionado
-        });
-        widget.onChanged(newValue!); // Llama al callback con el nuevo valor
-      },
-      items: _tiposUnidad.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-            value: value, // Valor del item del dropdown
-            child: Text(
-              value, // Texto a mostrar en el dropdown
-              style: TextStyle(
-                  color: themeModel
-                      .secondaryTextColor), // Cambia el color del texto aquí), // Texto a mostrar en el dropdown
-            )
-        );
-      }).toList(),
+      child: DropdownButtonHideUnderline(
+        // Oculta la línea que aparece debajo del dropdown
+
+        child: DropdownButton<String>(
+          value: _selectedTipo, // Tipo de unidad seleccionado
+          icon: Icon(Icons.arrow_drop_down,
+              color: themeModel.secondaryTextColor), // Icono del dropdown
+          style: TextStyle(
+            fontSize: fontSizeModel.textSize, // Tamaño dinámico del texto
+            color: themeModel.primaryTextColor, // Color del texto dinámico
+          ),
+          dropdownColor:
+              themeModel.primaryButtonColor, // Color de fondo del dropdown
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedTipo =
+                  newValue!; // Actualiza el tipo de unidad seleccionado
+            });
+            widget.onChanged(newValue!); // Llama al callback con el nuevo valor
+          },
+          items: _tiposUnidad.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+                value: value, // Valor del item del dropdown
+                child: Text(
+                  value, // Texto a mostrar en el dropdown
+                  style: TextStyle(
+                      color: themeModel
+                          .secondaryTextColor), // Cambia el color del texto aquí), // Texto a mostrar en el dropdown
+                ));
+          }).toList(),
+        ),
+      ),
     );
   }
 }
