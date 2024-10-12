@@ -1,3 +1,4 @@
+// Importar las librerías necesarias
 import 'package:DulcePrecision/utils/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:DulcePrecision/models/db_model.dart'; // Modelo Receta
@@ -17,7 +18,6 @@ class RecetasProvider with ChangeNotifier {
     } catch (e) {
       // Registro de errores usando CustomLogger
       CustomLogger().logError('Error al obtener recetas: $e');
-      // Aquí puedes manejar los errores, como mostrar un mensaje al usuario.
       throw Exception("Error al obtener recetas"); // Lanzamos una excepción para manejo externo
     }
   }
@@ -43,6 +43,30 @@ class RecetasProvider with ChangeNotifier {
       // Registro de errores usando CustomLogger
       CustomLogger().logError('Error al eliminar receta con id $idReceta: $e');
       throw Exception("Error al eliminar receta"); // Lanzamos una excepción para manejo externo
+    }
+  }
+
+  // Método para actualizar el precio de todas las recetas
+  Future<void> actualizarPreciosRecetas() async {
+    try {
+      // Obtener todas las recetas
+      List<Receta> recetas = await _recetaRepository.getAllRecetas(); // Obtén todas las recetas
+
+      // Iterar sobre cada receta
+      for (Receta receta in recetas) {
+        // Calcular el precio de la receta
+        double precio = await _recetaRepository.calcularPrecioReceta(receta.idReceta!); // Asegúrate de que el método calcularPrecioReceta existe en el repositorio
+
+        // Actualizar el precio de la receta en la base de datos
+        await _recetaRepository.actualizarPrecioReceta(receta.idReceta!, precio); // Asegúrate de que el método actualizarPrecioReceta está implementado
+      }
+
+      // Vuelve a obtener las recetas después de actualizar los precios
+      await obtenerRecetas(); // Actualiza la lista después de la actualización de precios
+    } catch (e) {
+      // Registro de errores usando CustomLogger
+      CustomLogger().logError('Error al actualizar precios de recetas: $e');
+      throw Exception("Error al actualizar precios de recetas"); // Lanzamos una excepción para manejo externo
     }
   }
 }

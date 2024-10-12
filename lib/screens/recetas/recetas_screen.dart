@@ -69,23 +69,42 @@ class _RecetasScreenState extends State<RecetasScreen> {
             fontSize: fontSizeModel.titleSize,
             color: themeModel.primaryTextColor,
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              size: fontSizeModel.iconSize,
-              color: themeModel.primaryIconColor,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InsertarRecetasScreen(), // Asegúrate de que esta pantalla esté implementada
-                ),
-              ).then((_) => recetasProvider.obtenerRecetas());
-            },
+        ),actions: [
+        // Botón de refresco para actualizar precios
+        IconButton(
+          icon: Icon(
+            Icons.refresh,
+            size: fontSizeModel.iconSize,
+            color: themeModel.primaryIconColor,
           ),
+          onPressed: () async {
+            try {
+              await recetasProvider.actualizarPreciosRecetas(); // Llama al método que actualiza los precios
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Precios actualizados con éxito!')),
+              );
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error al actualizar precios: $e')),
+              );
+            }
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.add,
+            size: fontSizeModel.iconSize,
+            color: themeModel.primaryIconColor,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InsertarRecetasScreen(),
+              ),
+            ).then((_) => recetasProvider.obtenerRecetas());
+          },
+        ),
         ],
       ),
       body: Consumer<RecetasProvider>(

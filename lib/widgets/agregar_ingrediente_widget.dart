@@ -1,48 +1,25 @@
+import 'package:DulcePrecision/utils/ingrediente_agregar_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'tipo_unidad_dropdown.dart';
+import 'package:DulcePrecision/widgets/tipo_unidad_dropdown.dart';
 
-class AgregarIngredientesWidget extends StatefulWidget {
-  @override
-  _AgregarIngredientesWidgetState createState() => _AgregarIngredientesWidgetState();
-}
-
-class _AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
-  List<Map<String, dynamic>> _ingredientes = [];
-
-  void _agregarIngrediente() {
-    setState(() {
-      _ingredientes.add({
-        'nombre': '',
-        'cantidad': '',
-        'tipoUnidad': 'gramos',
-      });
-    });
-  }
-
-  void _eliminarIngrediente(int index) {
-    setState(() {
-      _ingredientes.removeAt(index);
-    });
-  }
-
-  void _actualizarIngrediente(int index, String key, String value) {
-    setState(() {
-      _ingredientes[index][key] = value;
-    });
-  }
-
+class AgregarIngredientesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AgregarIngredientesProvider>(context);
+
     return Column(
       children: [
         ElevatedButton(
-          onPressed: _agregarIngrediente,
+          onPressed: provider.agregarIngrediente,
           child: Text('Añadir Ingrediente'),
+          style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 40)),
         ),
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: _ingredientes.length,
+          itemCount: provider.getIngredientes.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -54,22 +31,13 @@ class _AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
                       Expanded(
                         flex: 2,
                         child: TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Nombre del Ingrediente',
-                          ),
-                          onChanged: (value) => _actualizarIngrediente(index, 'nombre', value),
+                          decoration: InputDecoration(labelText: 'Nombre del Ingrediente'),
+                          onChanged: (value) => provider.actualizarIngrediente(index, 'nombre', value),
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        flex: 1,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Cantidad',
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) => _actualizarIngrediente(index, 'cantidad', value),
-                        ),
+                      IconButton(
+                        icon: Icon(Icons.remove_circle, color: Colors.red),
+                        onPressed: () => provider.eliminarIngrediente(index),
                       ),
                     ],
                   ),
@@ -77,14 +45,17 @@ class _AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
                   Row(
                     children: [
                       Expanded(
-                        child: TipoUnidadDropdown(
-                          initialValue: _ingredientes[index]['tipoUnidad'],
-                          onChanged: (value) => _actualizarIngrediente(index, 'tipoUnidad', value),
+                        flex: 7,
+                        child: TextField(
+                          decoration: InputDecoration(labelText: 'Cantidad'),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) => provider.actualizarIngrediente(index, 'cantidad', value),
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.remove_circle, color: Colors.red),
-                        onPressed: () => _eliminarIngrediente(index),
+                      SizedBox(width: 8),
+                      TipoUnidadDropdown(
+                        initialValue: provider.getIngredientes[index]['tipoUnidad'],
+                        onChanged: (value) => provider.actualizarIngrediente(index, 'tipoUnidad', value),
                       ),
                     ],
                   ),
