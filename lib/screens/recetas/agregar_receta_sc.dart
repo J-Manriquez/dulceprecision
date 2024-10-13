@@ -66,12 +66,24 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nombre de la Receta',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: fontSizeModel.textSize,
+                      color: themeModel.secondaryTextColor,
+                    ),
+                  ),
+                ),
                 TextField(
                   controller: _nombreController,
                   decoration: InputDecoration(
-                    labelText: 'Nombre de la Receta',
+                    labelText: '',
                     labelStyle: TextStyle(
                       color: themeModel.secondaryTextColor,
+                      fontSize: fontSizeModel.textSize,
                     ),
                   ),
                   style: TextStyle(
@@ -88,12 +100,24 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
                     idReceta: widget.receta!.idReceta!,
                   ),
                 SizedBox(height: 20),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Descripción',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: fontSizeModel.textSize,
+                      color: themeModel.secondaryTextColor,
+                    ),
+                  ),
+                ),
                 TextField(
                   controller: _descripcionController,
                   decoration: InputDecoration(
-                    labelText: 'Descripción',
+                    labelText: '',
                     labelStyle: TextStyle(
                       color: themeModel.secondaryTextColor,
+                      fontSize: fontSizeModel.textSize,
                     ),
                   ),
                   maxLines: 5,
@@ -126,7 +150,10 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
     );
   }
 
-  Future<void> _guardarIngredientes(int idReceta, List<IngredienteReceta> ingredientesEditados, List<Map<String, dynamic>> nuevosIngredientes) async {
+  Future<void> _guardarIngredientes(
+      int idReceta,
+      List<IngredienteReceta> ingredientesEditados,
+      List<Map<String, dynamic>> nuevosIngredientes) async {
     final ingredienteRepo = IngredienteRecetaRepository();
 
     // Primero, eliminamos todos los ingredientes existentes
@@ -134,23 +161,28 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
 
     // Luego, insertamos los ingredientes editados
     if (ingredientesEditados.isNotEmpty) {
-      await ingredienteRepo.insertarIngredientes(ingredientesEditados, idReceta);
+      await ingredienteRepo.insertarIngredientes(
+          ingredientesEditados, idReceta);
     }
 
     // Finalmente, insertamos los nuevos ingredientes
     if (nuevosIngredientes.isNotEmpty) {
-      final nuevosIngredientesReceta = nuevosIngredientes.map((ing) => IngredienteReceta(
-        nombreIngrediente: ing['nombre'],
-        costoIngrediente: 0, // Ajusta esto según tus necesidades
-        cantidadIngrediente: double.parse(ing['cantidad']),
-        tipoUnidadIngrediente: ing['tipoUnidad'],
-        idReceta: idReceta,
-      )).toList();
+      final nuevosIngredientesReceta = nuevosIngredientes
+          .map((ing) => IngredienteReceta(
+                nombreIngrediente: ing['nombre'],
+                costoIngrediente: 0, // Ajusta esto según tus necesidades
+                cantidadIngrediente: double.parse(ing['cantidad']),
+                tipoUnidadIngrediente: ing['tipoUnidad'],
+                idReceta: idReceta,
+              ))
+          .toList();
 
-      await ingredienteRepo.insertarIngredientes(nuevosIngredientesReceta, idReceta);
+      await ingredienteRepo.insertarIngredientes(
+          nuevosIngredientesReceta, idReceta);
     }
 
-    CustomLogger().logInfo('Ingredientes guardados: ${ingredientesEditados.length} editados, ${nuevosIngredientes.length} nuevos');
+    CustomLogger().logInfo(
+        'Ingredientes guardados: ${ingredientesEditados.length} editados, ${nuevosIngredientes.length} nuevos');
   }
 
   Future<void> _guardarReceta(
@@ -185,25 +217,37 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       if (widget.receta == null) {
         id = await recetaRepo.insertReceta(receta);
         // Para nuevas recetas, solo obtenemos los nuevos ingredientes
-        final nuevosIngredientes = _agregarIngredientesKey.currentState?.obtenerIngredientes() ?? [];
+        final nuevosIngredientes =
+            _agregarIngredientesKey.currentState?.obtenerIngredientes() ?? [];
         await _guardarIngredientes(id, [], nuevosIngredientes);
       } else {
         await recetaRepo.actualizarReceta(receta);
         id = receta.idReceta!;
         // Para recetas existentes, obtenemos tanto los editados como los nuevos
-        final ingredientesEditados = _editarIngredientesKey.currentState?.obtenerIngredientesEditados() ?? [];
-        final nuevosIngredientes = _editarIngredientesKey.currentState?.obtenerNuevosIngredientes() ?? [];
-        await _guardarIngredientes(id, ingredientesEditados, nuevosIngredientes);
+        final ingredientesEditados = _editarIngredientesKey.currentState
+                ?.obtenerIngredientesEditados() ??
+            [];
+        final nuevosIngredientes =
+            _editarIngredientesKey.currentState?.obtenerNuevosIngredientes() ??
+                [];
+        await _guardarIngredientes(
+            id, ingredientesEditados, nuevosIngredientes);
       }
 
       // Obtener ingredientes editados y nuevos.
-      final ingredientesEditados = _editarIngredientesKey.currentState?.obtenerIngredientesEditados() ?? [];
+      final ingredientesEditados =
+          _editarIngredientesKey.currentState?.obtenerIngredientesEditados() ??
+              [];
 
-      CustomLogger().logInfo('ingredientesEditados a guardar: ${ingredientesEditados.toString()}');
+      CustomLogger().logInfo(
+          'ingredientesEditados a guardar: ${ingredientesEditados.toString()}');
 
-      final nuevosIngredientes = _editarIngredientesKey.currentState?.obtenerNuevosIngredientes() ?? [];
+      final nuevosIngredientes =
+          _editarIngredientesKey.currentState?.obtenerNuevosIngredientes() ??
+              [];
 
-      CustomLogger().logInfo('nuevosIngredientes a guardar: ${nuevosIngredientes.toString()}');
+      CustomLogger().logInfo(
+          'nuevosIngredientes a guardar: ${nuevosIngredientes.toString()}');
 
       // Limpiar los controladores de texto y los estados de los ingredientes.
       _nombreController.clear();
@@ -222,4 +266,3 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
     }
   }
 }
-

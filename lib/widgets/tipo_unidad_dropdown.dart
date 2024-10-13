@@ -17,10 +17,10 @@ class _TipoUnidadDropdownState extends State<TipoUnidadDropdown> {
   // Lista de tipos de unidad disponibles
   final List<String> _tiposUnidad = [
     'gramos',
-    'mililitros',
     'kilogramos',
-    'litros',
     'unidad',
+    'mililitros',
+    'litros',
   ];
 
   late String _selectedTipo; // Almacena el tipo de unidad seleccionado
@@ -29,7 +29,7 @@ class _TipoUnidadDropdownState extends State<TipoUnidadDropdown> {
   void initState() {
     super.initState();
     // Inicializa el tipo de unidad seleccionado
-    _selectedTipo = _tiposUnidad[4]; // Usa el valor inicial o el primero de la lista
+    _selectedTipo = _tiposUnidad[2]; // Usa el valor inicial o el primero de la lista
   }
 
   @override

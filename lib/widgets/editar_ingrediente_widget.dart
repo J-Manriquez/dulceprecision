@@ -45,10 +45,11 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     }
   }
 
-   // Método para obtener los ingredientes editados
+  // Método para obtener los ingredientes editados
   List<IngredienteReceta> obtenerIngredientesEditados() {
     return _ingredientes;
   }
+
   List<Map<String, dynamic>> obtenerNuevosIngredientes() {
     return _agregarIngredientesKey.currentState?.obtenerIngredientes() ?? [];
   }
@@ -68,11 +69,10 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     return Column(
       children: [
         // Text(
-        //   'Ingredientes',
+        //   '',
         //   style: TextStyle(
-        //     fontSize: fontSizeModel.subtitleSize,
-        //     fontWeight: FontWeight.bold,
-        //     color: themeModel.primaryTextColor,
+        //     fontSize: fontSizeModel.textSize,
+        //     color: themeModel.secondaryTextColor,
         //   ),
         // ),
         SizedBox(height: 10),
@@ -95,18 +95,52 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
         TextEditingController(text: ingrediente.cantidadIngrediente.toString());
     String tipoUnidad = ingrediente.tipoUnidadIngrediente;
 
-    return Card(
+    return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: EdgeInsets.all(8),
         child: Column(
           children: [
-            TextField(
-              controller: nombreController,
-              decoration: InputDecoration(labelText: 'Nombre del Ingrediente'),
-              style: TextStyle(
-                  fontSize: fontSizeModel.textSize,
-                  color: themeModel.secondaryTextColor),
+            // TextField(
+            //   controller: nombreController,
+            //   decoration: InputDecoration(labelText: 'Nombre del Ingrediente'),
+            //   style: TextStyle(
+            //       fontSize: fontSizeModel.textSize,
+            //       color: themeModel.secondaryTextColor),
+            // ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: nombreController,
+                    decoration: InputDecoration(
+                      labelText: 'Nombre del Ingrediente',
+                      labelStyle: TextStyle(
+                          color: themeModel
+                              .secondaryTextColor // Color del label cuando no hay texto
+                          ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: themeModel.secondaryButtonColor.withOpacity(
+                              0.5), // Color del borde cuando está enfocado
+                          width: 3.0, // Grosor del borde
+                        ),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: themeModel
+                              .secondaryTextColor, // Color del borde cuando está habilitado
+                          width: 1.0, // Grosor del borde
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.remove_circle, color: themeModel.secondaryButtonColor.withOpacity(0.6)),
+                  onPressed: () => _eliminarIngrediente(ingrediente.idIngrediente!),
+                ),
+              ],
             ),
             Row(
               children: [
@@ -144,28 +178,17 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
                       nombreController.text,
                       cantidadController.text,
                       tipoUnidad),
-                  child: Text('Guardar'),
+                  child: Text('Actualizar Ingrediente'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: themeModel.primaryButtonColor,
                     foregroundColor: themeModel.primaryTextColor,
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () =>
-                      _eliminarIngrediente(ingrediente.idIngrediente!),
-                  child: Text('Eliminar'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
                   ),
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Future<void> _actualizarIngrediente(IngredienteReceta ingrediente,
@@ -204,5 +227,4 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
       );
     }
   }
-
 }

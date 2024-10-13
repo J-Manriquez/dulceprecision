@@ -113,7 +113,7 @@ class AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
                       ),
                       SizedBox(width: 8),
                       IconButton(
-                        icon: Icon(Icons.remove_circle, color: Colors.red),
+                        icon: Icon(Icons.remove_circle, color: themeModel.secondaryButtonColor.withOpacity(0.6)),
                         onPressed: () => _eliminarIngrediente(index),
                       ),
                     ],
