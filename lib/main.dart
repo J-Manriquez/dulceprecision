@@ -2,6 +2,7 @@ import 'package:DulcePrecision/database/dp_db.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
+import 'package:DulcePrecision/utils/ingredientes_provider.dart';
 import 'package:DulcePrecision/utils/productos_provider.dart';
 import 'package:DulcePrecision/utils/recetas_provider.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (_) => ProductosProvider()), // Proveer ProductosProvider
         ChangeNotifierProvider(create: (_) => RecetasProvider()),
+        ChangeNotifierProvider(create: (_) => IngredientesRecetasProvider()),
       ],
       child: MyApp(),
     ),
