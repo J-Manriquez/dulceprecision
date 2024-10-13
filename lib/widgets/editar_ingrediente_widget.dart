@@ -145,6 +145,7 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
             Row(
               children: [
                 Expanded(
+                  flex: 2,
                   child: TextField(
                     controller: cantidadController,
                     decoration: InputDecoration(labelText: 'Cantidad'),
