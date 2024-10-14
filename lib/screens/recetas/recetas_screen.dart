@@ -1,4 +1,5 @@
 import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
+import 'package:DulcePrecision/utils/ingredientes_provider.dart';
 import 'package:flutter/material.dart';
 // import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart'; // Asegúrate de tener esta pantalla
 import 'package:provider/provider.dart';
@@ -42,10 +43,13 @@ class _RecetasScreenState extends State<RecetasScreen> {
 
     if (confirmar == true) {
       try {
+        await Provider.of<IngredientesRecetasProvider>(context, listen: false).eliminarIngredientesPorReceta(idReceta);
         await Provider.of<RecetasProvider>(context, listen: false).eliminarReceta(idReceta);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Receta eliminada con éxito!')),
         );
+        
+
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al eliminar la receta: $e')),
@@ -128,16 +132,6 @@ class _RecetasScreenState extends State<RecetasScreen> {
                               ),
                             ),
                             SizedBox(height: 4),
-                            if (receta.descripcionReceta != null) ...[
-                              Text(
-                                'Descripción: ${receta.descripcionReceta}',
-                                style: TextStyle(
-                                  fontSize: fontSizeModel.textSize,
-                                  color: themeModel.secondaryTextColor,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                            ],
                             if (receta.costoReceta != null) ...[
                               Text(
                                 'Precio: \$${receta.costoReceta!.toStringAsFixed(2)}',

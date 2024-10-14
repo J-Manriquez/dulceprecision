@@ -23,39 +23,37 @@ class IngredientesRecetasProvider with ChangeNotifier {
   }
 
   // Método para agregar un ingrediente
-Future<void> agregarIngrediente(IngredienteReceta ingrediente) async {
-  try {
-    // Creamos una lista con el ingrediente que queremos agregar
-    List<IngredienteReceta> ingredientesLista = [ingrediente];
+  Future<void> agregarIngrediente(IngredienteReceta ingrediente) async {
+    try {
+      // Creamos una lista con el ingrediente que queremos agregar
+      List<IngredienteReceta> ingredientesLista = [ingrediente];
 
-    // Llamamos a insertarIngredientes, pasando la lista y el idReceta
-    await _ingredienteRepository.insertarIngredientes(ingredientesLista, ingrediente.idReceta);
-    
-    // Actualiza la lista después de insertar
-    await obtenerIngredientesPorReceta(ingrediente.idReceta); 
-  } catch (e) {
-    // Registro de errores usando CustomLogger
-    CustomLogger().logError('Error al agregar ingrediente: $e');
-    throw Exception("Error al agregar ingrediente"); // Lanzamos una excepción para manejo externo
+      // Llamamos a insertarIngredientes, pasando la lista y el idReceta
+      await _ingredienteRepository.insertarIngredientes(ingredientesLista, ingrediente.idReceta);
+      
+      // Actualiza la lista después de insertar
+      await obtenerIngredientesPorReceta(ingrediente.idReceta); 
+    } catch (e) {
+      // Registro de errores usando CustomLogger
+      CustomLogger().logError('Error al agregar ingrediente: $e');
+      throw Exception("Error al agregar ingrediente"); // Lanzamos una excepción para manejo externo
+    }
   }
-}
-
 
   // Método para eliminar un ingrediente
-Future<void> eliminarIngrediente(int idIngrediente) async {
-  try {
-    // Primero obtenemos el ingrediente antes de eliminarlo para obtener su idReceta
-    final ingrediente = await _ingredienteRepository.getIngredienteById(idIngrediente);
-    
-    await _ingredienteRepository.eliminarIngrediente(idIngrediente); // Elimina ingrediente
-    await obtenerIngredientesPorReceta(ingrediente.idReceta); // Actualiza la lista después de eliminar
-  } catch (e) {
-    // Registro de errores usando CustomLogger
-    CustomLogger().logError('Error al eliminar ingrediente con id $idIngrediente: $e');
-    throw Exception("Error al eliminar ingrediente"); // Lanzamos una excepción para manejo externo
+  Future<void> eliminarIngrediente(int idIngrediente) async {
+    try {
+      // Primero obtenemos el ingrediente antes de eliminarlo para obtener su idReceta
+      final ingrediente = await _ingredienteRepository.getIngredienteById(idIngrediente);
+      
+      await _ingredienteRepository.eliminarIngrediente(idIngrediente); // Elimina ingrediente
+      await obtenerIngredientesPorReceta(ingrediente.idReceta); // Actualiza la lista después de eliminar
+    } catch (e) {
+      // Registro de errores usando CustomLogger
+      CustomLogger().logError('Error al eliminar ingrediente con id $idIngrediente: $e');
+      throw Exception("Error al eliminar ingrediente"); // Lanzamos una excepción para manejo externo
+    }
   }
-}
-
 
   // Método para actualizar un ingrediente
   Future<void> actualizarIngrediente(IngredienteReceta ingrediente) async {
@@ -66,6 +64,27 @@ Future<void> eliminarIngrediente(int idIngrediente) async {
       // Registro de errores usando CustomLogger
       CustomLogger().logError('Error al actualizar ingrediente con id ${ingrediente.idIngrediente}: $e');
       throw Exception("Error al actualizar ingrediente"); // Lanzamos una excepción para manejo externo
+    }
+  }
+
+  // Método para eliminar ingredientes por receta
+  Future<void> eliminarIngredientesPorReceta(int idReceta) async {
+    try {
+      await _ingredienteRepository.eliminarIngredientesPorReceta(idReceta); // Elimina todos los ingredientes de una receta
+      await obtenerIngredientesPorReceta(idReceta); // Actualiza la lista de ingredientes
+    } catch (e) {
+      CustomLogger().logError('Error al eliminar ingredientes por receta: $e');
+      throw Exception("Error al eliminar ingredientes por receta");
+    }
+  }
+
+  // Método para obtener un ingrediente por su ID
+  Future<IngredienteReceta> obtenerIngredientePorId(int idIngrediente) async {
+    try {
+      return await _ingredienteRepository.getIngredienteById(idIngrediente); // Obtiene un ingrediente específico
+    } catch (e) {
+      CustomLogger().logError('Error al obtener ingrediente por ID: $e');
+      throw Exception("Error al obtener ingrediente por ID");
     }
   }
 }
