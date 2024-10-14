@@ -5,8 +5,8 @@ class ThemeModel with ChangeNotifier {
   Color _backgroundColor = Color.fromRGBO(30, 30, 30, 1); 
   Color  _primaryButtonColor = Color.fromRGBO(0, 108, 161, 1); 
   Color  _secondaryButtonColor = Color.fromRGBO(245, 245, 245, 1);
-  Color  _primaryTextColor = Color.fromRGBO(30, 30, 30, 1); 
-  Color  _secondaryTextColor = Color.fromRGBO(245, 245, 245, 1);
+  Color  _primaryTextColor = Color.fromRGBO(245, 245, 245, 1);
+  Color  _secondaryTextColor = Color.fromRGBO(30, 30, 30, 1); 
   Color  _primaryIconColor = Color.fromRGBO(30, 30, 30, 1); 
   Color  _secondaryIconColor = Color.fromRGBO(245, 245, 245, 1);
 
