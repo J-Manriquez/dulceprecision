@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class ThemeModel with ChangeNotifier {
   // Colores predeterminados para el tema personalizado
-  Color _backgroundColor = Color.fromRGBO(255, 255, 194, 1); // Pastel claro
-  Color _primaryButtonColor = Color.fromRGBO(211, 177, 150, 1); // Pastel claro
-  Color _secondaryButtonColor = Color.fromRGBO(203, 40, 40, 1); // Pastel claro
-  Color _primaryTextColor = Color.fromRGBO(255, 255, 194, 1); // Pastel claro
-  Color _secondaryTextColor = Color.fromRGBO(30, 30, 30, 1);    // Más oscuro
-  Color _primaryIconColor = Color.fromRGBO(255, 255, 194, 1); // Pastel claro
-  Color _secondaryIconColor = Color.fromRGBO(109, 82, 61, 1);   // Más oscuro
+  Color _backgroundColor = Color.fromRGBO(30, 30, 30, 1); 
+  Color  _primaryButtonColor = Color.fromRGBO(0, 108, 161, 1); 
+  Color  _secondaryButtonColor = Color.fromRGBO(245, 245, 245, 1);
+  Color  _primaryTextColor = Color.fromRGBO(30, 30, 30, 1); 
+  Color  _secondaryTextColor = Color.fromRGBO(245, 245, 245, 1);
+  Color  _primaryIconColor = Color.fromRGBO(30, 30, 30, 1); 
+  Color  _secondaryIconColor = Color.fromRGBO(245, 245, 245, 1);
 
   // Getters para los colores
   Color get backgroundColor => _backgroundColor;
