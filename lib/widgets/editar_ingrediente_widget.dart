@@ -1,29 +1,26 @@
-import 'package:DulcePrecision/widgets/agregar_ingrediente_widget.dart';
-import 'package:DulcePrecision/widgets/tipo_unidad_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/db_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
+import 'package:DulcePrecision/utils/ingredientes_provider.dart';
+import 'package:DulcePrecision/widgets/agregar_ingrediente_widget.dart';
+import 'package:DulcePrecision/widgets/tipo_unidad_dropdown.dart';
 
 class EditarIngredientesWidget extends StatefulWidget {
   final int idReceta;
 
-  EditarIngredientesWidget({Key? key, required this.idReceta})
-      : super(key: key);
+  EditarIngredientesWidget({Key? key, required this.idReceta}) : super(key: key);
 
   @override
-  EditarIngredientesWidgetState createState() =>
-      EditarIngredientesWidgetState();
+  EditarIngredientesWidgetState createState() => EditarIngredientesWidgetState();
 }
 
 class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
-  final IngredienteRecetaRepository _ingredienteRepo =
-      IngredienteRecetaRepository();
+  final IngredienteRecetaRepository _ingredienteRepo = IngredienteRecetaRepository();
   List<IngredienteReceta> _ingredientes = [];
-  final GlobalKey<AgregarIngredientesWidgetState> _agregarIngredientesKey =
-      GlobalKey();
+  final GlobalKey<AgregarIngredientesWidgetState> _agregarIngredientesKey = GlobalKey();
 
   @override
   void initState() {
@@ -33,8 +30,7 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
 
   Future<void> _cargarIngredientes() async {
     try {
-      final ingredientes =
-          await _ingredienteRepo.getAllIngredientesPorReceta(widget.idReceta);
+      final ingredientes = await _ingredienteRepo.getAllIngredientesPorReceta(widget.idReceta);
       setState(() {
         _ingredientes = ingredientes;
       });
@@ -45,7 +41,6 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     }
   }
 
-  // Método para obtener los ingredientes editados
   List<IngredienteReceta> obtenerIngredientesEditados() {
     return _ingredientes;
   }
@@ -54,7 +49,6 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     return _agregarIngredientesKey.currentState?.obtenerIngredientes() ?? [];
   }
 
-  // Método para limpiar los ingredientes
   void limpiarIngredientes() {
     setState(() {
       _ingredientes.clear();
@@ -68,18 +62,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
 
     return Column(
       children: [
-        // Text(
-        //   '',
-        //   style: TextStyle(
-        //     fontSize: fontSizeModel.textSize,
-        //     color: themeModel.secondaryTextColor,
-        //   ),
-        // ),
         SizedBox(height: 10),
-        ..._ingredientes
-            .map((ingrediente) =>
-                _buildIngredienteItem(ingrediente, themeModel, fontSizeModel))
-            .toList(),
+        ..._ingredientes.map((ingrediente) => _buildIngredienteItem(ingrediente, themeModel, fontSizeModel)).toList(),
         SizedBox(height: 20),
         AgregarIngredientesWidget(key: _agregarIngredientesKey),
         SizedBox(height: 20),
@@ -87,127 +71,113 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     );
   }
 
-  Widget _buildIngredienteItem(IngredienteReceta ingrediente,
-      ThemeModel themeModel, FontSizeModel fontSizeModel) {
-    final nombreController =
-        TextEditingController(text: ingrediente.nombreIngrediente);
-    final cantidadController =
-        TextEditingController(text: ingrediente.cantidadIngrediente.toString());
+  Widget _buildIngredienteItem(IngredienteReceta ingrediente, ThemeModel themeModel, FontSizeModel fontSizeModel) {
+    final nombreController = TextEditingController(text: ingrediente.nombreIngrediente);
+    final cantidadController = TextEditingController(text: ingrediente.cantidadIngrediente.toString());
     String tipoUnidad = ingrediente.tipoUnidadIngrediente;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          children: [
-            // TextField(
-            //   controller: nombreController,
-            //   decoration: InputDecoration(labelText: 'Nombre del Ingrediente'),
-            //   style: TextStyle(
-            //       fontSize: fontSizeModel.textSize,
-            //       color: themeModel.secondaryTextColor),
-            // ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    if (!hasFocus) {
+                      _actualizarIngrediente(ingrediente, nombre: nombreController.text);
+                    }
+                  },
                   child: TextField(
                     controller: nombreController,
                     decoration: InputDecoration(
                       labelText: 'Nombre del Ingrediente',
-                      labelStyle: TextStyle(
-                          color: themeModel
-                              .secondaryTextColor // Color del label cuando no hay texto
-                          ),
+                      labelStyle: TextStyle(color: themeModel.secondaryTextColor),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: themeModel.secondaryButtonColor.withOpacity(
-                              0.5), // Color del borde cuando está enfocado
-                          width: 3.0, // Grosor del borde
+                          color: themeModel.secondaryButtonColor.withOpacity(0.5),
+                          width: 3.0,
                         ),
                       ),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: themeModel
-                              .secondaryTextColor, // Color del borde cuando está habilitado
-                          width: 1.0, // Grosor del borde
+                          color: themeModel.secondaryTextColor,
+                          width: 1.0,
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.remove_circle, color: themeModel.secondaryButtonColor.withOpacity(0.6)),
-                  onPressed: () => _eliminarIngrediente(ingrediente.idIngrediente!),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
+              ),
+              SizedBox(width: 8),
+              IconButton(
+                icon: Icon(Icons.remove_circle, color: themeModel.secondaryButtonColor.withOpacity(0.6)),
+                onPressed: () => _eliminarIngrediente(ingrediente.idIngrediente!),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    if (!hasFocus) {
+                      _actualizarIngrediente(ingrediente, cantidad: double.tryParse(cantidadController.text));
+                    }
+                  },
                   child: TextField(
                     controller: cantidadController,
                     decoration: InputDecoration(labelText: 'Cantidad'),
                     keyboardType: TextInputType.number,
                     style: TextStyle(
-                        fontSize: fontSizeModel.textSize,
-                        color: themeModel.secondaryTextColor),
+                      fontSize: fontSizeModel.textSize,
+                      color: themeModel.secondaryTextColor
+                    ),
                   ),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: TipoUnidadDropdown(
-                    initialValue: tipoUnidad, // Valor inicial para el dropdown
-                    onChanged: (String newValue) {
-                      setState(() {
-                        tipoUnidad =
-                            newValue; // Actualiza el tipo de unidad cuando cambia
-                      });
-                    },
-                  ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: TipoUnidadDropdown(
+                  initialValue: tipoUnidad,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      tipoUnidad = newValue;
+                      _actualizarIngrediente(ingrediente, tipoUnidad: newValue);
+                    });
+                  },
                 ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _actualizarIngrediente(
-                      ingrediente,
-                      nombreController.text,
-                      cantidadController.text,
-                      tipoUnidad),
-                  child: Text('Actualizar Ingrediente'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeModel.primaryButtonColor,
-                    foregroundColor: themeModel.primaryTextColor,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 
-  Future<void> _actualizarIngrediente(IngredienteReceta ingrediente,
-      String nombre, String cantidad, String tipoUnidad) async {
+  Future<void> _actualizarIngrediente(IngredienteReceta ingrediente, {String? nombre, double? cantidad, String? tipoUnidad}) async {
+    final ingredienteActualizado = IngredienteReceta(
+      idIngrediente: ingrediente.idIngrediente,
+      nombreIngrediente: nombre ?? ingrediente.nombreIngrediente,
+      costoIngrediente: ingrediente.costoIngrediente,
+      cantidadIngrediente: cantidad ?? ingrediente.cantidadIngrediente,
+      tipoUnidadIngrediente: tipoUnidad ?? ingrediente.tipoUnidadIngrediente,
+      idReceta: ingrediente.idReceta,
+    );
+
     try {
-      final ingredienteActualizado = IngredienteReceta(
-        idIngrediente: ingrediente.idIngrediente,
-        nombreIngrediente: nombre,
-        costoIngrediente: ingrediente.costoIngrediente,
-        cantidadIngrediente: double.parse(cantidad),
-        tipoUnidadIngrediente: tipoUnidad,
-        idReceta: widget.idReceta,
-      );
-      await _ingredienteRepo.actualizarIngrediente(ingredienteActualizado);
-      await _cargarIngredientes();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ingrediente actualizado con éxito')),
-      );
+      await Provider.of<IngredientesRecetasProvider>(context, listen: false).actualizarIngrediente(ingredienteActualizado);
+      // Actualizamos el ingrediente en la lista local
+      setState(() {
+        final index = _ingredientes.indexWhere((ing) => ing.idIngrediente == ingrediente.idIngrediente);
+        if (index != -1) {
+          _ingredientes[index] = ingredienteActualizado;
+        }
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al actualizar ingrediente: $e')),
@@ -217,7 +187,7 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
 
   Future<void> _eliminarIngrediente(int idIngrediente) async {
     try {
-      await _ingredienteRepo.eliminarIngrediente(idIngrediente);
+      await Provider.of<IngredientesRecetasProvider>(context, listen: false).eliminarIngrediente(idIngrediente);
       await _cargarIngredientes();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ingrediente eliminado con éxito')),

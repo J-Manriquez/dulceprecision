@@ -53,6 +53,17 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       builder: (context, ingredientesProvider, child) {
         return Scaffold(
           appBar: AppBar(
+            leading: Container(
+              alignment: Alignment.center,
+              child: IconButton(
+                icon:
+                    Icon(Icons.arrow_back, color: themeModel.primaryIconColor),
+                iconSize: fontSizeModel.iconSize, // Tamaño dinámico del ícono
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
             title: Text(
               widget.receta == null ? 'Insertar Receta' : 'Editar Receta',
               style: TextStyle(
@@ -170,7 +181,7 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       final nuevosIngredientesReceta = nuevosIngredientes
           .map((ing) => IngredienteReceta(
                 nombreIngrediente: ing['nombre'],
-                costoIngrediente: 0, // Ajusta esto según tus necesidades
+                costoIngrediente: 0,
                 cantidadIngrediente: double.parse(ing['cantidad']),
                 tipoUnidadIngrediente: ing['tipoUnidad'],
                 idReceta: idReceta,
@@ -187,43 +198,34 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
 
   Future<void> _guardarReceta(
       IngredientesRecetasProvider ingredientesProvider) async {
-    // Crear instancias de los repositorios para manejar las recetas y los ingredientes.
     final recetaRepo = RecetaRepository();
 
-    // Verificar que los campos de nombre y descripción no estén vacíos.
     if (_nombreController.text.isEmpty || _descripcionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Por favor, completa todos los campos.')),
       );
-      return; // Salir de la función si los campos están vacíos.
+      return;
     }
 
-    // Crear un objeto Receta con los datos proporcionados por el usuario.
     final receta = Receta(
-      idReceta: widget.receta?.idReceta, // Si existe, asignar el ID existente.
-      nombreReceta: _nombreController
-          .text, // Nombre de la receta ingresado por el usuario.
-      descripcionReceta: _descripcionController
-          .text, // Descripción de la receta ingresada por el usuario.
-      costoReceta:
-          0.0, // Costo inicial de la receta, se puede calcular más tarde.
+      idReceta: widget.receta?.idReceta,
+      nombreReceta: _nombreController.text,
+      descripcionReceta: _descripcionController.text,
+      costoReceta: 0.0,
     );
 
-    // Log de información sobre la receta antes de guardar.
     CustomLogger().logInfo('Receta a guardar: ${receta.toString()}');
 
     try {
       int id;
       if (widget.receta == null) {
         id = await recetaRepo.insertReceta(receta);
-        // Para nuevas recetas, solo obtenemos los nuevos ingredientes
         final nuevosIngredientes =
             _agregarIngredientesKey.currentState?.obtenerIngredientes() ?? [];
         await _guardarIngredientes(id, [], nuevosIngredientes);
       } else {
         await recetaRepo.actualizarReceta(receta);
         id = receta.idReceta!;
-        // Para recetas existentes, obtenemos tanto los editados como los nuevos
         final ingredientesEditados = _editarIngredientesKey.currentState
                 ?.obtenerIngredientesEditados() ??
             [];
@@ -234,32 +236,14 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
             id, ingredientesEditados, nuevosIngredientes);
       }
 
-      // Obtener ingredientes editados y nuevos.
-      final ingredientesEditados =
-          _editarIngredientesKey.currentState?.obtenerIngredientesEditados() ??
-              [];
-
-      CustomLogger().logInfo(
-          'ingredientesEditados a guardar: ${ingredientesEditados.toString()}');
-
-      final nuevosIngredientes =
-          _editarIngredientesKey.currentState?.obtenerNuevosIngredientes() ??
-              [];
-
-      CustomLogger().logInfo(
-          'nuevosIngredientes a guardar: ${nuevosIngredientes.toString()}');
-
-      // Limpiar los controladores de texto y los estados de los ingredientes.
       _nombreController.clear();
       _descripcionController.clear();
       _editarIngredientesKey.currentState?.limpiarIngredientes();
       _agregarIngredientesKey.currentState?.limpiarIngredientes();
 
-      // Mostrar un mensaje de éxito al guardar la receta.
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Receta guardada con éxito')));
     } catch (e) {
-      // Mostrar un mensaje de error en caso de excepciones.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar la receta: $e')),
       );
