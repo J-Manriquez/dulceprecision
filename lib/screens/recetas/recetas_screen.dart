@@ -1,4 +1,5 @@
 import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
+import 'package:DulcePrecision/screens/recetas/receta_modals.dart';
 import 'package:DulcePrecision/utils/ingredientes_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -143,7 +144,8 @@ class _RecetasScreenState extends State<RecetasScreen> {
                           ],
                           GestureDetector(
                             onTap: () {
-                              // Lógica para ver detalles de la receta
+                              mostrarDetallesModal(
+                                  context, receta.nombreReceta);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -194,7 +196,10 @@ class _RecetasScreenState extends State<RecetasScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                // Lógica para la acción "Ver"
+                                mostrarContenidoRecetaModal(
+                                    context,
+                                    receta
+                                        .idReceta!); // Llama al modal de contenido
                               },
                               child: Text(
                                 'Ver',

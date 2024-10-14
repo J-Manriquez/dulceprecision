@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FontSizeModel with ChangeNotifier {
   // Tamaños predeterminados
-  double _titleSize = 24.0;
+  double _titleSize = 26.0;
   double _subtitleSize = 20.0;
   double _textSize = 18.0;
   double _iconSize = 26.0;

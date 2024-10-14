@@ -4,9 +4,26 @@ import 'package:DulcePrecision/models/db_model.dart'; // Modelo Receta
 import 'package:DulcePrecision/database/metodos/recetas_metodos.dart'; // Repositorio de recetas
 
 class RecetasProvider with ChangeNotifier {
-  List<Receta> _recetas = []; // Lista privada de recetas
   final RecetaRepository _recetaRepository = RecetaRepository(); // Instancia del repositorio
 
+  Receta? _receta; // Variable para almacenar la receta
+
+  // Método para obtener una receta por ID
+  Future<void> obtenerRecetaPorId(int idReceta) async {
+    try {
+      _receta = await _recetaRepository.obtenerRecetaPorId(idReceta);
+      notifyListeners(); // Notifica a los widgets que los datos han cambiado
+    } catch (e) {
+      // Manejo de errores
+      CustomLogger().logError('Error al obtener receta por ID: $e');
+      throw Exception("Error al obtener receta por ID");
+    }
+  }
+
+  Receta? get receta => _receta; // Getter para acceder a la receta
+
+
+  List<Receta> _recetas = []; // Lista privada de recetas
   List<Receta> get recetas => _recetas; // Getter para la lista de recetas
 
   // Método para obtener recetas desde la base de datos

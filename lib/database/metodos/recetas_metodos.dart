@@ -4,6 +4,30 @@ import 'package:DulcePrecision/database/dp_db.dart'; // Importamos el helper de 
 import 'package:DulcePrecision/models/db_model.dart'; // Importamos el modelo Receta
 
 class RecetaRepository {
+  // Método para obtener una receta por su ID
+Future<Receta?> obtenerRecetaPorId(int idReceta) async {
+  final db = await DatabaseHelper().database; // Obtenemos la instancia de la base de datos
+  try {
+    final List<Map<String, dynamic>> maps = await db.query(
+      'recetas', // Nombre de la tabla
+      where: 'idReceta = ?', // Condición para buscar por idReceta
+      whereArgs: [idReceta], // Argumento para el ID de la receta
+    );
+
+    // Verificamos si se encontró alguna receta
+    if (maps.isNotEmpty) {
+      return Receta.fromMap(maps.first); // Convertimos el primer mapa a un objeto Receta
+    } else {
+      return null; // Si no se encuentra la receta, devolvemos null
+    }
+  } catch (e) {
+    // Si ocurre un error, lo registramos y lanzamos una excepción
+    CustomLogger().logError('Error al obtener receta con id $idReceta: $e');
+    throw Exception("Error al obtener receta");
+  }
+}
+
+
   // Método para eliminar una receta
   Future<void> eliminarReceta(int idReceta) async {
     final db = await DatabaseHelper().database; // Obtenemos la instancia de la base de datos
