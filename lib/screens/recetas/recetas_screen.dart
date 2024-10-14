@@ -1,11 +1,10 @@
 import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
 import 'package:DulcePrecision/utils/ingredientes_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart'; // Asegúrate de tener esta pantalla
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
-import 'package:DulcePrecision/utils/recetas_provider.dart'; // Importa el RecetasProvider
+import 'package:DulcePrecision/utils/recetas_provider.dart';
 
 class RecetasScreen extends StatefulWidget {
   @override
@@ -43,13 +42,13 @@ class _RecetasScreenState extends State<RecetasScreen> {
 
     if (confirmar == true) {
       try {
-        await Provider.of<IngredientesRecetasProvider>(context, listen: false).eliminarIngredientesPorReceta(idReceta);
-        await Provider.of<RecetasProvider>(context, listen: false).eliminarReceta(idReceta);
+        await Provider.of<IngredientesRecetasProvider>(context, listen: false)
+            .eliminarIngredientesPorReceta(idReceta);
+        await Provider.of<RecetasProvider>(context, listen: false)
+            .eliminarReceta(idReceta);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Receta eliminada con éxito!')),
         );
-        
-
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al eliminar la receta: $e')),
@@ -85,7 +84,7 @@ class _RecetasScreenState extends State<RecetasScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => InsertarRecetasScreen(), // Asegúrate de que esta pantalla esté implementada
+                  builder: (context) => InsertarRecetasScreen(),
                 ),
               ).then((_) => recetasProvider.obtenerRecetas());
             },
@@ -116,65 +115,143 @@ class _RecetasScreenState extends State<RecetasScreen> {
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Nombre: ${receta.nombreReceta}',
-                              style: TextStyle(
-                                fontSize: fontSizeModel.textSize,
-                                color: themeModel.secondaryTextColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            if (receta.costoReceta != null) ...[
-                              Text(
-                                'Precio: \$${receta.costoReceta!.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: fontSizeModel.textSize,
-                                  color: themeModel.secondaryTextColor,
-                                ),
-                              ),
-                            ],
-                          ],
+                      // Primera fila: Nombre de la receta
+                      Text(
+                        'Nombre: ${receta.nombreReceta}',
+                        style: TextStyle(
+                          fontSize: fontSizeModel.textSize,
+                          color: themeModel.secondaryTextColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      SizedBox(height: 8),
+                      // Segunda fila: Precio y botón "Detalles"
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      InsertarRecetasScreen(receta: receta), // Asegúrate de que esta pantalla esté implementada
-                                ),
-                              ).then((_) => recetasProvider.obtenerRecetas());
-                            },
-                            child: Text(
-                              'Editar',
+                          if (receta.costoReceta != null) ...[
+                            Text(
+                              'Precio: \$${receta.costoReceta!.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: fontSizeModel.textSize,
                                 color: themeModel.secondaryTextColor,
+                              ),
+                            ),
+                          ],
+                          GestureDetector(
+                            onTap: () {
+                              // Lógica para ver detalles de la receta
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 3),
+                              // decoration: BoxDecoration(
+                              //   color: themeModel.primaryButtonColor,
+                              //   borderRadius: BorderRadius.circular(8),
+                              // ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: fontSizeModel.iconSize * 0.7,
+                                    color: themeModel.primaryIconColor,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Detalles',
+                                    style: TextStyle(
+                                      fontSize: fontSizeModel.textSize,
+                                      color: themeModel.secondaryTextColor,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4),
+                                  Icon(
+                                    Icons.visibility,
+                                    size: fontSizeModel.iconSize * 0.7,
+                                    color: themeModel.primaryIconColor,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              _eliminarReceta(context, receta.idReceta!);
-                            },
-                            child: Text(
-                              'Borrar',
-                              style: TextStyle(
-                                fontSize: fontSizeModel.textSize,
-                                color: themeModel.secondaryTextColor,
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      // Tercera fila: Botones "Editar", "Borrar" y "Ver"
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 3, // Proporción para el botón "Ver"
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeModel.primaryButtonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                // Lógica para la acción "Ver"
+                              },
+                              child: Text(
+                                'Ver',
+                                style: TextStyle(
+                                  fontSize: fontSizeModel.textSize,
+                                  color: themeModel.primaryTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Expanded(
+                            flex: 3, // Proporción para el botón "Editar"
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeModel.primaryButtonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        InsertarRecetasScreen(receta: receta),
+                                  ),
+                                ).then((_) => recetasProvider.obtenerRecetas());
+                              },
+                              child: Text(
+                                'Editar',
+                                style: TextStyle(
+                                  fontSize: fontSizeModel.textSize,
+                                  color: themeModel.primaryTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Expanded(
+                            flex: 3, // Proporción para el botón "Borrar"
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeModel.primaryButtonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                _eliminarReceta(context, receta.idReceta!);
+                              },
+                              child: Text(
+                                'Borrar',
+                                style: TextStyle(
+                                  fontSize: fontSizeModel.textSize,
+                                  color: themeModel.primaryTextColor,
+                                ),
                               ),
                             ),
                           ),

@@ -1,3 +1,4 @@
+import 'package:DulcePrecision/utils/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/db_model.dart';
@@ -11,16 +12,20 @@ import 'package:DulcePrecision/widgets/tipo_unidad_dropdown.dart';
 class EditarIngredientesWidget extends StatefulWidget {
   final int idReceta;
 
-  EditarIngredientesWidget({Key? key, required this.idReceta}) : super(key: key);
+  EditarIngredientesWidget({Key? key, required this.idReceta})
+      : super(key: key);
 
   @override
-  EditarIngredientesWidgetState createState() => EditarIngredientesWidgetState();
+  EditarIngredientesWidgetState createState() =>
+      EditarIngredientesWidgetState();
 }
 
 class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
-  final IngredienteRecetaRepository _ingredienteRepo = IngredienteRecetaRepository();
+  final IngredienteRecetaRepository _ingredienteRepo =
+      IngredienteRecetaRepository();
   List<IngredienteReceta> _ingredientes = [];
-  final GlobalKey<AgregarIngredientesWidgetState> _agregarIngredientesKey = GlobalKey();
+  final GlobalKey<AgregarIngredientesWidgetState> _agregarIngredientesKey =
+      GlobalKey();
 
   @override
   void initState() {
@@ -30,7 +35,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
 
   Future<void> _cargarIngredientes() async {
     try {
-      final ingredientes = await _ingredienteRepo.getAllIngredientesPorReceta(widget.idReceta);
+      final ingredientes =
+          await _ingredienteRepo.getAllIngredientesPorReceta(widget.idReceta);
       setState(() {
         _ingredientes = ingredientes;
       });
@@ -63,7 +69,10 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     return Column(
       children: [
         SizedBox(height: 10),
-        ..._ingredientes.map((ingrediente) => _buildIngredienteItem(ingrediente, themeModel, fontSizeModel)).toList(),
+        ..._ingredientes
+            .map((ingrediente) =>
+                _buildIngredienteItem(ingrediente, themeModel, fontSizeModel))
+            .toList(),
         SizedBox(height: 20),
         AgregarIngredientesWidget(key: _agregarIngredientesKey),
         SizedBox(height: 20),
@@ -71,10 +80,14 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     );
   }
 
-  Widget _buildIngredienteItem(IngredienteReceta ingrediente, ThemeModel themeModel, FontSizeModel fontSizeModel) {
-    final nombreController = TextEditingController(text: ingrediente.nombreIngrediente);
-    final cantidadController = TextEditingController(text: ingrediente.cantidadIngrediente.toString());
+  Widget _buildIngredienteItem(IngredienteReceta ingrediente,
+      ThemeModel themeModel, FontSizeModel fontSizeModel) {
+    final nombreController =
+        TextEditingController(text: ingrediente.nombreIngrediente);
+    final cantidadController =
+        TextEditingController(text: ingrediente.cantidadIngrediente.toString());
     String tipoUnidad = ingrediente.tipoUnidadIngrediente;
+    CustomLogger().logInfo('Tipo de Unidad: $tipoUnidad');
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -87,17 +100,20 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     if (!hasFocus) {
-                      _actualizarIngrediente(ingrediente, nombre: nombreController.text);
+                      _actualizarIngrediente(ingrediente,
+                          nombre: nombreController.text);
                     }
                   },
                   child: TextField(
                     controller: nombreController,
                     decoration: InputDecoration(
                       labelText: 'Nombre del Ingrediente',
-                      labelStyle: TextStyle(color: themeModel.secondaryTextColor),
+                      labelStyle:
+                          TextStyle(color: themeModel.secondaryTextColor),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: themeModel.secondaryButtonColor.withOpacity(0.5),
+                          color:
+                              themeModel.secondaryButtonColor.withOpacity(0.5),
                           width: 3.0,
                         ),
                       ),
@@ -113,8 +129,10 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
               ),
               SizedBox(width: 8),
               IconButton(
-                icon: Icon(Icons.remove_circle, color: themeModel.secondaryButtonColor.withOpacity(0.6)),
-                onPressed: () => _eliminarIngrediente(ingrediente.idIngrediente!),
+                icon: Icon(Icons.remove_circle,
+                    color: themeModel.secondaryButtonColor.withOpacity(0.6)),
+                onPressed: () =>
+                    _eliminarIngrediente(ingrediente.idIngrediente!),
               ),
             ],
           ),
@@ -125,7 +143,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     if (!hasFocus) {
-                      _actualizarIngrediente(ingrediente, cantidad: double.tryParse(cantidadController.text));
+                      _actualizarIngrediente(ingrediente,
+                          cantidad: double.tryParse(cantidadController.text));
                     }
                   },
                   child: TextField(
@@ -133,9 +152,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
                     decoration: InputDecoration(labelText: 'Cantidad'),
                     keyboardType: TextInputType.number,
                     style: TextStyle(
-                      fontSize: fontSizeModel.textSize,
-                      color: themeModel.secondaryTextColor
-                    ),
+                        fontSize: fontSizeModel.textSize,
+                        color: themeModel.secondaryTextColor),
                   ),
                 ),
               ),
@@ -159,7 +177,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     );
   }
 
-  Future<void> _actualizarIngrediente(IngredienteReceta ingrediente, {String? nombre, double? cantidad, String? tipoUnidad}) async {
+  Future<void> _actualizarIngrediente(IngredienteReceta ingrediente,
+      {String? nombre, double? cantidad, String? tipoUnidad}) async {
     final ingredienteActualizado = IngredienteReceta(
       idIngrediente: ingrediente.idIngrediente,
       nombreIngrediente: nombre ?? ingrediente.nombreIngrediente,
@@ -170,10 +189,12 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
     );
 
     try {
-      await Provider.of<IngredientesRecetasProvider>(context, listen: false).actualizarIngrediente(ingredienteActualizado);
+      await Provider.of<IngredientesRecetasProvider>(context, listen: false)
+          .actualizarIngrediente(ingredienteActualizado);
       // Actualizamos el ingrediente en la lista local
       setState(() {
-        final index = _ingredientes.indexWhere((ing) => ing.idIngrediente == ingrediente.idIngrediente);
+        final index = _ingredientes.indexWhere(
+            (ing) => ing.idIngrediente == ingrediente.idIngrediente);
         if (index != -1) {
           _ingredientes[index] = ingredienteActualizado;
         }
@@ -187,7 +208,8 @@ class EditarIngredientesWidgetState extends State<EditarIngredientesWidget> {
 
   Future<void> _eliminarIngrediente(int idIngrediente) async {
     try {
-      await Provider.of<IngredientesRecetasProvider>(context, listen: false).eliminarIngrediente(idIngrediente);
+      await Provider.of<IngredientesRecetasProvider>(context, listen: false)
+          .eliminarIngrediente(idIngrediente);
       await _cargarIngredientes();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ingrediente eliminado con éxito')),

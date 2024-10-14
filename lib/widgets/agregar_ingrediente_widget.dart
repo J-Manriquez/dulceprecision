@@ -1,3 +1,4 @@
+import 'package:DulcePrecision/utils/custom_logger.dart';
 import 'package:flutter/material.dart';
 import 'tipo_unidad_dropdown.dart';
 import 'package:DulcePrecision/models/theme_model.dart'; // Importamos el modelo de tema
@@ -19,7 +20,7 @@ class AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
       _ingredientes.add({
         'nombre': '',
         'cantidad': '',
-        'tipoUnidad': 'gramos',
+        'tipoUnidad': 'unidad',
       });
     });
   }
@@ -31,10 +32,13 @@ class AgregarIngredientesWidgetState extends State<AgregarIngredientesWidget> {
   }
 
   void _actualizarIngrediente(int index, String key, String value) {
-    setState(() {
-      _ingredientes[index][key] = value;
-    });
-  }
+  setState(() {
+    _ingredientes[index][key] = value;
+    CustomLogger().logInfo('tipo unidad, Ingrediente actualizado: ${_ingredientes[index]}');
+
+  });
+}
+
   void actualizarIngredientesExistentes(List<Map<String, dynamic>> ingredientes) {
     setState(() {
       _ingredientes = ingredientes;

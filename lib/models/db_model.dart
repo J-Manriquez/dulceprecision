@@ -100,6 +100,11 @@ class IngredienteReceta {
     required this.idReceta,
   });
 
+  @override
+  String toString() {
+    return 'IngredienteReceta(nombreIngrediente: $nombreIngrediente, costoIngrediente: $costoIngrediente,cantidadIngrediente: $cantidadIngrediente, tipoUnidadIngrediente: $tipoUnidadIngrediente, idReceta: $idReceta)';
+  }
+
   // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {

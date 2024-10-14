@@ -28,8 +28,10 @@ class _TipoUnidadDropdownState extends State<TipoUnidadDropdown> {
   @override
   void initState() {
     super.initState();
-    // Inicializa el tipo de unidad seleccionado
-    _selectedTipo = _tiposUnidad[2]; // Usa el valor inicial o el primero de la lista
+    // Inicializa el tipo de unidad seleccionado con el valor inicial proporcionado o un valor por defecto
+    _selectedTipo = widget.initialValue != null && _tiposUnidad.contains(widget.initialValue)
+        ? widget.initialValue!
+        : _tiposUnidad[2]; // Usa el valor inicial o 'unidad' por defecto
   }
 
   @override
