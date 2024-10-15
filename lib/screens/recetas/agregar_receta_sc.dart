@@ -334,7 +334,7 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
                       fontSize: fontSizeModel.textSize,
                     ),
                   ),
-                  maxLines: 5,
+                  maxLines: 15,
                   style: TextStyle(
                     fontSize: fontSizeModel.textSize,
                     color: themeModel.secondaryTextColor,

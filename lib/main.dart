@@ -1,4 +1,5 @@
 import 'package:DulcePrecision/database/dp_db.dart';
+import 'package:DulcePrecision/database/insertar_repositorio.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
@@ -42,9 +43,12 @@ void main() async {
   //Listar las tablas existentes
   // await metodosRepository.listTables();
 
+  // Llama a la función para insertar los datos en la base de datos
+  await insertarRepositorio();
+
   // mostrar el contenido de una tabla en especifico
-  await metodosRepository.getTableContent('recetas');
-  await metodosRepository.getTableContent('ingredientesRecetas');
+  // await metodosRepository.getTableContent('recetas');
+  // await metodosRepository.getTableContent('ingredientesRecetas');
 
   runApp(
     MultiProvider(
