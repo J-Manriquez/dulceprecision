@@ -387,7 +387,7 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       final nuevosIngredientesReceta = nuevosIngredientes
           .map((ing) => IngredienteReceta(
                 nombreIngrediente: ing['nombre'],
-                costoIngrediente: 0,
+                costoIngrediente: "0",
                 cantidadIngrediente: double.parse(ing['cantidad']),
                 tipoUnidadIngrediente: ing['tipoUnidad'],
                 idReceta: idReceta,
@@ -417,7 +417,7 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       idReceta: widget.receta?.idReceta,
       nombreReceta: _nombreController.text,
       descripcionReceta: _descripcionController.text,
-      costoReceta: 0.0,
+      costoReceta: "0.0",
     );
 
     CustomLogger().logInfo('Receta a guardar: ${receta.toString()}');

@@ -1,3 +1,5 @@
+import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
+import 'package:DulcePrecision/database/metodos/recetas_metodos.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
 import 'package:DulcePrecision/database/providers/recetas_provider.dart';
@@ -146,85 +148,142 @@ Future<void> mostrarContenidoRecetaModal(
 }
 
 // Modal para ver los detalles de la receta
-Future<void> mostrarDetallesModal(BuildContext context, String nombreReceta) {
+Future<void> mostrarDetallesModal(BuildContext context, int? idReceta) {
   final themeModel = Provider.of<ThemeModel>(context, listen: false);
   final fontSizeModel = Provider.of<FontSizeModel>(context, listen: false);
+
+  final recetaRepositorio = RecetaRepository();
+  final ingredienteRecetaRepositorio = IngredienteRecetaRepository();
 
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return Dialog(
-        child: Container(
-          width: MediaQuery.of(context).size.width *
-              0.8, // Ancho en 80% de la pantalla
-          height: MediaQuery.of(context).size.height *
-              0.6, // Alto en 60% de la pantalla
-          decoration: BoxDecoration(
-            color: themeModel.backgroundColor, // Color de fondo del modal
-            borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 10), // Padding para el título
-                child: Center(
-                  child: Text(
-                    'Precios de los Ingredientes',
-                    style: TextStyle(
-                      fontSize: fontSizeModel.titleSize,
-                      color: themeModel.primaryTextColor,
-                    ),
+      return FutureBuilder<Receta?>(
+        future: recetaRepositorio.obtenerRecetaPorId(idReceta!),
+        builder: (context, recetaSnapshot) {
+          if (recetaSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!recetaSnapshot.hasData || recetaSnapshot.data == null) {
+            return Center(child: Text('No se pudo cargar la receta.'));
+          }
+          final receta = recetaSnapshot.data!;
+
+          return FutureBuilder<List<IngredienteReceta>>(
+            future: ingredienteRecetaRepositorio
+                .getAllIngredientesPorReceta(idReceta),
+            builder: (context, ingredientesSnapshot) {
+              if (ingredientesSnapshot.connectionState ==
+                  ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (!ingredientesSnapshot.hasData ||
+                  ingredientesSnapshot.data!.isEmpty) {
+                return Center(child: Text('No hay ingredientes disponibles.'));
+              }
+              final ingredientes = ingredientesSnapshot.data!;
+
+              return Dialog(
+                child: Container(
+                  width: MediaQuery.of(context).size.width *
+                      0.8, // Ancho en 80% de la pantalla
+                  height: MediaQuery.of(context).size.height *
+                      0.8, // Alto en 60% de la pantalla
+                  decoration: BoxDecoration(
+                    color:
+                        themeModel.backgroundColor, // Color de fondo del modal
+                    borderRadius:
+                        BorderRadius.circular(20), // Esquinas redondeadas
                   ),
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5), // Padding para el texto
-                        child: Text(
-                          'Este modal está vacío por ahora.',
-                          style: TextStyle(
-                              fontSize: fontSizeModel.textSize,
-                              color: themeModel.primaryTextColor),
+                            horizontal: 16,
+                            vertical: 10), // Padding para el título
+                        child: Center(
+                          child: Text(
+                            'Costos de la receta: \n${receta.nombreReceta}',
+                            style: TextStyle(
+                              fontSize: fontSizeModel.titleSize,
+                              color: themeModel.primaryTextColor,
+                            ),
+                          ),
                         ),
                       ),
-                      // Agrega más detalles si es necesario
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisSize: MainAxisSize.min,
+                            children: ingredientes.map((ingrediente) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 25,
+                                    vertical:
+                                        5), // Padding para cada ingrediente
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '• ${ingrediente.nombreIngrediente}',
+                                      style: TextStyle(
+                                        fontSize: fontSizeModel.textSize,
+                                        color: themeModel.primaryTextColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Costo: ${ingrediente.costoIngrediente}',
+                                      style: TextStyle(
+                                        fontSize: fontSizeModel.textSize,
+                                        color: themeModel.primaryTextColor,
+                                      ),
+                                    ),
+                                    Divider(
+                                      color: themeModel.primaryTextColor,
+                                      thickness: 1,
+                                      height: 10,
+                                    ),
+                                    SizedBox(
+                                        height:
+                                            8), // Espacio entre ingredientes
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16), // Padding para el botón "Cerrar"
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 40),
+                            backgroundColor: themeModel.primaryButtonColor,
+                            foregroundColor: themeModel.primaryTextColor,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Cierra el modal
+                          },
+                          child: Text(
+                            'Cerrar',
+                            style: TextStyle(
+                              fontSize: fontSizeModel.subtitleSize,
+                              color: themeModel.primaryTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16), // Padding para el botón "Cerrar"
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 40),
-                    backgroundColor: themeModel.primaryButtonColor,
-                    foregroundColor: themeModel.primaryTextColor,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Cierra el modal
-                  },
-                  child: Text(
-                    'Cerrar',
-                    style: TextStyle(
-                      fontSize: fontSizeModel.subtitleSize,
-                      color: themeModel.primaryTextColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+              );
+            },
+          );
+        },
       );
     },
   );

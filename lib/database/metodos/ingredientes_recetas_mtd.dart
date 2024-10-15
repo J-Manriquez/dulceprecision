@@ -4,6 +4,27 @@ import 'package:DulcePrecision/database/dp_db.dart'; // Importamos el helper de 
 import 'package:DulcePrecision/models/db_model.dart'; // Importamos el modelo IngredienteReceta
 
 class IngredienteRecetaRepository {
+  // Método para obtener todos los ingredientes de la tabla
+  Future<List<IngredienteReceta>> getAllIngredientes() async {
+    final db = await DatabaseHelper()
+        .database; // Obtenemos la instancia de la base de datos
+    try {
+      // Obtenemos todos los registros de la tabla 'ingredientesRecetas'
+      final List<Map<String, dynamic>> maps =
+          await db.query('ingredientesRecetas');
+
+      // Convertimos la lista de mapas a una lista de objetos IngredienteReceta
+      return List.generate(maps.length, (i) {
+        return IngredienteReceta.fromMap(
+            maps[i]); // Creamos un objeto IngredienteReceta a partir del mapa
+      });
+    } catch (e) {
+      // Si ocurre un error, lo registramos y lanzamos una excepción
+      CustomLogger().logError('Error al obtener todos los ingredientes: $e');
+      throw Exception("Error al obtener todos los ingredientes");
+    }
+  }
+
   Future<void> eliminarIngredientesPorReceta(int idReceta) async {
     final db = await DatabaseHelper().database;
     try {
@@ -21,19 +42,26 @@ class IngredienteRecetaRepository {
 
   // Método para obtener un ingrediente por su ID
   Future<IngredienteReceta> getIngredienteById(int idIngrediente) async {
-    final db = await DatabaseHelper()
-        .database; // Obtenemos la instancia de la base de datos
-    final List<Map<String, dynamic>> maps = await db.query(
-      'ingredientesRecetas', // Nombre de la tabla
-      where: 'idIngrediente = ?', // Condición para buscar el ingrediente
-      whereArgs: [idIngrediente], // Argumento para el ID del ingrediente
-    );
+    try {
+      final db = await DatabaseHelper()
+          .database; // Obtenemos la instancia de la base de datos
+      final List<Map<String, dynamic>> maps = await db.query(
+        'ingredientesRecetas', // Nombre de la tabla
+        where: 'idIngrediente = ?', // Condición para buscar el ingrediente
+        whereArgs: [idIngrediente], // Argumento para el ID del ingrediente
+      );
 
-    if (maps.isNotEmpty) {
-      return IngredienteReceta.fromMap(
-          maps.first); // Retorna el ingrediente si se encuentra
-    } else {
-      throw Exception('Ingrediente no encontrado'); // Manejo de errores
+      if (maps.isNotEmpty) {
+        return IngredienteReceta.fromMap(
+            maps.first); // Retorna el ingrediente si se encuentra
+      } else {
+        throw Exception('Ingrediente no encontrado'); // Manejo de errores
+      }
+    } catch (e) {
+      // Si ocurre un error, lo registramos y lanzamos una excepción
+      CustomLogger()
+          .logError('Error al obtener ingrediente con id $idIngrediente: $e');
+      throw Exception("Error al obtener producto");
     }
   }
 
@@ -103,56 +131,56 @@ class IngredienteRecetaRepository {
 
   // Método para insertar un nuevo ingrediente en la base de datos
   Future<void> insertarIngredientes(
-    List<IngredienteReceta> ingredientes, int idReceta) async {
-  // Obtenemos la instancia de la base de datos
-  final db = await DatabaseHelper().database;
+      List<IngredienteReceta> ingredientes, int idReceta) async {
+    // Obtenemos la instancia de la base de datos
+    final db = await DatabaseHelper().database;
 
-  // Log para mostrar el inicio de la inserción de ingredientes
-  CustomLogger().logInfo('Iniciando inserción de ingredientes para la receta con id: $idReceta');
-  CustomLogger().logInfo('Ingredientes a insertar: ${ingredientes.toString()}');
+    // Log para mostrar el inicio de la inserción de ingredientes
+    CustomLogger().logInfo(
+        'Iniciando inserción de ingredientes para la receta con id: $idReceta');
+    CustomLogger()
+        .logInfo('Ingredientes a insertar: ${ingredientes.toString()}');
 
-  try {
-    // Primero, verificamos si el idReceta existe en la tabla recetas
-    final existsQuery = await db.query(
-      'recetas',
-      where: 'idReceta = ?',
-      whereArgs: [idReceta],
-    );
-
-    // Log del resultado de la consulta
-    CustomLogger().logInfo('Resultado de la consulta de recetas: $existsQuery');
-
-    if (existsQuery.isEmpty) {
-      throw Exception('La receta con id $idReceta no existe');
-    }
-
-    // Si la receta existe, procedemos a insertar cada ingrediente
-    for (var ingrediente in ingredientes) {
-      // Asignamos el idReceta al ingrediente antes de insertarlo
-      ingrediente.idReceta = idReceta; // Asegúrate de que 'idReceta' es una propiedad de 'IngredienteReceta'
-
-      // Log para mostrar el ingrediente que se va a insertar
-      CustomLogger().logInfo('Insertando ingrediente: ${ingrediente.toMap()}');
-
-      await db.insert(
-        'ingredientesRecetas',
-        ingrediente.toMap(), // Convertimos el ingrediente a un mapa
-        conflictAlgorithm: ConflictAlgorithm.replace, // Manejo de conflictos
+    try {
+      // Primero, verificamos si el idReceta existe en la tabla recetas
+      final existsQuery = await db.query(
+        'recetas',
+        where: 'idReceta = ?',
+        whereArgs: [idReceta],
       );
 
-      // Log de éxito tras la inserción del ingrediente
-      CustomLogger().logInfo('Ingrediente insertado: ${ingrediente.nombreIngrediente} para la receta id: $idReceta');
+      // Log del resultado de la consulta
+      CustomLogger()
+          .logInfo('Resultado de la consulta de recetas: $existsQuery');
+
+      if (existsQuery.isEmpty) {
+        throw Exception('La receta con id $idReceta no existe');
+      }
+
+      // Si la receta existe, procedemos a insertar cada ingrediente
+      for (var ingrediente in ingredientes) {
+        // Asignamos el idReceta al ingrediente antes de insertarlo
+        ingrediente.idReceta =
+            idReceta; // Asegúrate de que 'idReceta' es una propiedad de 'IngredienteReceta'
+
+        // Log para mostrar el ingrediente que se va a insertar
+        CustomLogger()
+            .logInfo('Insertando ingrediente: ${ingrediente.toMap()}');
+
+        await db.insert(
+          'ingredientesRecetas',
+          ingrediente.toMap(), // Convertimos el ingrediente a un mapa
+          conflictAlgorithm: ConflictAlgorithm.ignore, // Manejo de conflictos
+        );
+
+        // Log de éxito tras la inserción del ingrediente
+        CustomLogger().logInfo(
+            'Ingrediente insertado: ${ingrediente.nombreIngrediente} para la receta id: $idReceta');
+      }
+    } catch (e) {
+      // Si ocurre un error, lo registramos y lanzamos una excepción
+      CustomLogger().logError('Error al insertar ingredientes: $e');
+      rethrow; // Re-lanzamos la excepción para que pueda ser manejada por el llamador
     }
-  } catch (e) {
-    // Si ocurre un error, lo registramos y lanzamos una excepción
-    CustomLogger().logError('Error al insertar ingredientes: $e');
-    rethrow; // Re-lanzamos la excepción para que pueda ser manejada por el llamador
   }
 }
-
-}
-
-
-
-
-

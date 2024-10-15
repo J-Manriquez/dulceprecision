@@ -88,7 +88,7 @@ Future<Receta?> obtenerRecetaPorId(int idReceta) async {
       return await db.insert(
         'recetas', // Nombre de la tabla
         receta.toMap(), // Convertimos la receta a un mapa usando el método toMap()
-        conflictAlgorithm: ConflictAlgorithm.replace, // Si existe un conflicto (ej. id duplicado), reemplazamos el registro
+        conflictAlgorithm: ConflictAlgorithm.ignore, // Si existe un conflicto (ej. id duplicado), reemplazamos el registro
       );
     } catch (e) {
       // Si ocurre un error, lo registramos y lanzamos una excepción

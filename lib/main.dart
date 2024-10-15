@@ -6,6 +6,8 @@ import 'package:DulcePrecision/screens/productos/productos_screen.dart';
 import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:DulcePrecision/database/providers/productos_provider.dart';
 import 'package:DulcePrecision/database/providers/recetas_provider.dart';
+import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
+import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/theme_model.dart'; // Importa el modelo de tema
@@ -30,7 +32,7 @@ void main() async {
   }
 
   // Instancia de MetodosRepository
-  // MetodosRepository metodosRepository = MetodosRepository();
+  MetodosRepository metodosRepository = MetodosRepository();
   // Llama a deleteDatabase sin argumentos
   // // ojo cuidado ;-; // //await metodosRepository.eliminarDatabase();
 
@@ -43,11 +45,22 @@ void main() async {
   //Listar las tablas existentes
   // await metodosRepository.listTables();
 
+  // mostrar el contenido de una tabla en especifico
+
   // Llama a la función para insertar los datos en la base de datos
+  await Future.delayed(Duration(seconds: 2));
   await insertarRepositorio();
 
-  // mostrar el contenido de una tabla en especifico
-  // await metodosRepository.getTableContent('recetas');
+  // actualiza los costos de los ingredientes:
+  // await actualizarCostosAllIngredientes();
+  // await calcularCostoCadaRecetas();
+  // await Future.delayed(Duration(seconds: 2));
+  await actualizarCostosAllIngredientes();
+
+  await Future.delayed(Duration(seconds: 2));
+  await calcularCostoCadaRecetas();
+
+  await metodosRepository.getTableContent('recetas');
   // await metodosRepository.getTableContent('ingredientesRecetas');
 
   runApp(

@@ -16,6 +16,13 @@ class Producto {
     required this.cantidadUnidadesProducto,
   });
 
+  // Sobrescribe el método toString para proporcionar una representación en cadena del objeto
+  @override
+  String toString() {
+    return 'Producto(nombreProducto: $nombreProducto, precioProducto: $precioProducto, cantidadProducto: $cantidadProducto, tipoUnidadProducto: $tipoUnidadProducto, cantidadUnidadesProducto: $cantidadUnidadesProducto)';
+  }
+
+
   // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
     return {
@@ -48,7 +55,7 @@ class Receta {
   final int? idReceta;
   final String nombreReceta;
   final String? descripcionReceta; // Puede ser null
-  final double? costoReceta; // Puede ser null
+  final String? costoReceta; // Puede ser null
 
   // Constructor
   Receta({
@@ -57,6 +64,13 @@ class Receta {
     this.descripcionReceta,
     this.costoReceta,
   });
+
+  // Sobrescribe el método toString para proporcionar una representación en cadena del objeto
+  @override
+  String toString() {
+    return 'Receta(nombreReceta: $nombreReceta, descripcionReceta: $descripcionReceta, costoReceta: $costoReceta)';
+  }
+
 
   // Método para convertir el objeto en un mapa
   Map<String, dynamic> toMap() {
@@ -85,7 +99,7 @@ class Receta {
 class IngredienteReceta {
   final int? idIngrediente;
   final String nombreIngrediente;
-  final double costoIngrediente;
+  final String costoIngrediente;
   final double cantidadIngrediente;
   final String tipoUnidadIngrediente;
   int idReceta; // Relacionado con la tabla Recetas
@@ -100,6 +114,7 @@ class IngredienteReceta {
     required this.idReceta,
   });
 
+  // Sobrescribe el método toString para proporcionar una representación en cadena del objeto
   @override
   String toString() {
     return 'IngredienteReceta(nombreIngrediente: $nombreIngrediente, costoIngrediente: $costoIngrediente,cantidadIngrediente: $cantidadIngrediente, tipoUnidadIngrediente: $tipoUnidadIngrediente, idReceta: $idReceta)';

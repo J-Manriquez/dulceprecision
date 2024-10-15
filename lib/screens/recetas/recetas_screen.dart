@@ -133,9 +133,27 @@ class _RecetasScreenState extends State<RecetasScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          // Verifica si el costo de la receta es un número válido o contiene letras
                           if (receta.costoReceta != null) ...[
+                            // Expresión regular para verificar si contiene letras
+//                             RegExp(r'[a-zA-Z]').hasMatch(receta.costoReceta!)
+//                                 ? Text(
+//                                     '''Precio:
+// No se puede calcular''',
+//                                     style: TextStyle(
+//                                       fontSize: fontSizeModel.textSize,
+//                                       color: themeModel.secondaryTextColor,
+//                                     ),
+//                                   )
+//                                 : Text(
+//                                     'Precio: \$${receta.costoReceta!}',
+//                                     style: TextStyle(
+//                                       fontSize: fontSizeModel.textSize,
+//                                       color: themeModel.secondaryTextColor,
+//                                     ),
+//                                   ),
                             Text(
-                              'Precio: \$${receta.costoReceta!.toStringAsFixed(2)}',
+                              'Precio: \$${receta.costoReceta!}',
                               style: TextStyle(
                                 fontSize: fontSizeModel.textSize,
                                 color: themeModel.secondaryTextColor,
@@ -144,12 +162,11 @@ class _RecetasScreenState extends State<RecetasScreen> {
                           ],
                           GestureDetector(
                             onTap: () {
-                              mostrarDetallesModal(
-                                  context, receta.nombreReceta);
+                              mostrarDetallesModal(context, receta.idReceta);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 3),
+                                  horizontal: 15, vertical: 3),
                               // decoration: BoxDecoration(
                               //   color: themeModel.primaryButtonColor,
                               //   borderRadius: BorderRadius.circular(8),

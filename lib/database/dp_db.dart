@@ -59,7 +59,7 @@ class DatabaseHelper {
                     idReceta INTEGER PRIMARY KEY AUTOINCREMENT, -- ID único para cada receta
                     nombreReceta TEXT NOT NULL, -- Nombre de la receta
                     descripcionReceta TEXT, -- Descripción de la receta
-                    costoReceta REAL -- Precio de la receta
+                    costoReceta TEXT -- Precio de la receta
                   );
                 ''');
             CustomLogger().logInfo('Tabla recetas creada correctamente');
@@ -68,7 +68,7 @@ class DatabaseHelper {
                   CREATE TABLE IF NOT EXISTS ingredientesRecetas (
                     idIngrediente INTEGER PRIMARY KEY AUTOINCREMENT, -- ID único para cada ingrediente
                     nombreIngrediente TEXT NOT NULL, -- Nombre del ingrediente
-                    costoIngrediente REAL NOT NULL, -- Costo del ingrediente
+                    costoIngrediente TEXT NOT NULL, -- Costo del ingrediente
                     cantidadIngrediente REAL NOT NULL, -- Cantidad usada del ingrediente
                     tipoUnidadIngrediente TEXT NOT NULL, -- Unidad del ingrediente (ej. gramos, litros)
                     idReceta INTEGER, -- ID de la receta asociada
