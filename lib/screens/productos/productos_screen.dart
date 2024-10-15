@@ -3,7 +3,7 @@ import 'package:DulcePrecision/screens/productos/agregar_producto_sc.dart';
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
-import 'package:DulcePrecision/utils/productos_provider.dart'; // Import the ProductosProvider
+import 'package:DulcePrecision/database/providers/productos_provider.dart'; // Import the ProductosProvider
 
 class ProductosScreen extends StatefulWidget {
   @override

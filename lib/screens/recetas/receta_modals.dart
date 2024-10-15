@@ -1,9 +1,9 @@
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
-import 'package:DulcePrecision/utils/recetas_provider.dart';
+import 'package:DulcePrecision/database/providers/recetas_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:DulcePrecision/utils/ingredientes_provider.dart'; // Importa el provider de ingredientes
+import 'package:DulcePrecision/database/providers/ingredientes_provider.dart'; // Importa el provider de ingredientes
 import 'package:DulcePrecision/models/db_model.dart'; // Asegúrate de tener este modelo importado
 
 // Modal para ver el contenido de la receta

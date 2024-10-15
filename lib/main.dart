@@ -3,9 +3,9 @@ import 'package:DulcePrecision/database/insertar_repositorio.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
-import 'package:DulcePrecision/utils/ingredientes_provider.dart';
-import 'package:DulcePrecision/utils/productos_provider.dart';
-import 'package:DulcePrecision/utils/recetas_provider.dart';
+import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
+import 'package:DulcePrecision/database/providers/productos_provider.dart';
+import 'package:DulcePrecision/database/providers/recetas_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/theme_model.dart'; // Importa el modelo de tema
@@ -30,7 +30,7 @@ void main() async {
   }
 
   // Instancia de MetodosRepository
-  MetodosRepository metodosRepository = MetodosRepository();
+  // MetodosRepository metodosRepository = MetodosRepository();
   // Llama a deleteDatabase sin argumentos
   // // ojo cuidado ;-; // //await metodosRepository.eliminarDatabase();
 

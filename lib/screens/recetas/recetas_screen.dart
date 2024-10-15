@@ -1,11 +1,11 @@
 import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
 import 'package:DulcePrecision/screens/recetas/receta_modals.dart';
-import 'package:DulcePrecision/utils/ingredientes_provider.dart';
+import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
-import 'package:DulcePrecision/utils/recetas_provider.dart';
+import 'package:DulcePrecision/database/providers/recetas_provider.dart';
 
 class RecetasScreen extends StatefulWidget {
   @override

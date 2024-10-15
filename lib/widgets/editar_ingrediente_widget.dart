@@ -5,7 +5,7 @@ import 'package:DulcePrecision/models/db_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
-import 'package:DulcePrecision/utils/ingredientes_provider.dart';
+import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:DulcePrecision/widgets/agregar_ingrediente_widget.dart';
 import 'package:DulcePrecision/widgets/tipo_unidad_dropdown.dart';
 
