@@ -70,7 +70,7 @@ Future<void> calcularCostoCadaRecetas() async {
       String costoRecetaMensaje;
       if (ingredientesConMensaje.isNotEmpty) {
         costoRecetaMensaje =
-            '''Estos ingredientes tienen un mensaje de alerta: \n \n${ingredientesConMensaje.join("\n")}''';
+            '''Estos ingredientes tienen un mensaje de alerta: \n${ingredientesConMensaje.join("\n")}''';
         CustomLogger().logInfo(
             'La receta con ID $idReceta contiene ingredientes con mensajes de alerta: ${ingredientesConMensaje.join(', ')}');
       } else if (ingredientesConCostoCero.isNotEmpty) {
