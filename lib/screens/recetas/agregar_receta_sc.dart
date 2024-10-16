@@ -1,4 +1,5 @@
 import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
+import 'package:DulcePrecision/screens/recetas/modals/confirmBAER_modal.dart';
 import 'package:DulcePrecision/utils/custom_logger.dart';
 import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
 import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
@@ -144,103 +145,6 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
     // }
   }
 
-  Future<bool> _mostrarDialogoConfirmacion(BuildContext context) async {
-    final themeModel = Provider.of<ThemeModel>(context, listen: false);
-    final fontSizeModel = Provider.of<FontSizeModel>(context, listen: false);
-
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => Dialog(
-            // Cambiamos AlertDialog por Dialog para mantener la consistencia
-            child: Container(
-              // width: MediaQuery.of(context).size.width *
-              //     , // Ancho en 80% de la pantalla
-              height: MediaQuery.of(context).size.height *
-                  0.4, // Alto en 60% de la pantalla
-              decoration: BoxDecoration(
-                color: themeModel.backgroundColor, // Color de fondo del modal
-                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(
-                    16.0), // Padding alrededor del contenido
-                child: Column(
-                  mainAxisSize: MainAxisSize
-                      .min, // Ajusta el tamaño del modal al contenido
-                  crossAxisAlignment: CrossAxisAlignment
-                      .stretch, // Estira los hijos para ocupar todo el ancho
-                  children: [
-                    Text(
-                      'Conservar receta',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: fontSizeModel.titleSize,
-                        color: themeModel.primaryTextColor,
-                      ),
-                    ),
-                    SizedBox(
-                        height: 10), // Espacio entre el título y el contenido
-                    Center(
-                      child: Text(
-                        '''No se aplicarán cambios a la receta 
-¿Está seguro de que desea volver sin guardar?''',
-                        style: TextStyle(
-                          fontSize: fontSizeModel.textSize,
-                          color: themeModel.primaryTextColor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                        height: 20), // Espacio entre el contenido y los botones
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment
-                          .spaceEvenly, // Alinea los botones en el centro
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: themeModel.primaryButtonColor,
-                              foregroundColor: themeModel.primaryTextColor,
-                            ),
-                            child: Text(
-                              'Cancelar',
-                              style: TextStyle(
-                                fontSize: fontSizeModel.subtitleSize,
-                              ),
-                            ),
-                            onPressed: () => Navigator.of(context)
-                                .pop(false), // Cierra el modal y retorna false
-                          ),
-                        ),
-                        SizedBox(width: 10), // Espacio entre los botones
-                        Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: themeModel.primaryTextColor,
-                              foregroundColor: themeModel.primaryButtonColor,
-                            ),
-                            child: Text(
-                              'Confirmar',
-                              style: TextStyle(
-                                fontSize: fontSizeModel.subtitleSize,
-                              ),
-                            ),
-                            onPressed: () => Navigator.of(context)
-                                .pop(true), // Cierra el modal y retorna true
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ) ??
-        false; // Retorna false si se cierra sin selección
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeModel = Provider.of<ThemeModel>(context);
@@ -258,7 +162,8 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
                 iconSize: fontSizeModel.iconSize, // Tamaño dinámico del ícono
                 onPressed: () async {
                   if (widget.receta != null) {
-                    bool confirm = await _mostrarDialogoConfirmacion(context);
+                    bool confirm =
+                        await ConfirmDialog.verConfirmacionBAER(context);
                     if (confirm) {
                       await restaurarReceta(widget.receta!.idReceta!);
                       Navigator.of(context).pop();
@@ -458,9 +363,8 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       await calcularCostoCadaRecetas();
 
       await Future.delayed(Duration(seconds: 1));
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Costos de ingredientes y recetas actualizados')));
-
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Costos de ingredientes y recetas actualizados')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar la receta: $e')),
