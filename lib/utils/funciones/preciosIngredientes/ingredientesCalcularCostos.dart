@@ -9,18 +9,18 @@ Future<void> actualizarCostosAllIngredientes() async {
   try {
     CustomLogger().logInfo('COMPARANDO NOMBRES');
     // Paso 1: Comparar nombres y obtener las coincidencias
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
     List<Map<String, String>> coincidencias = await compararNombres();
 
     CustomLogger().logInfo('COMPARANDO TIPO DE UNIDAD');
     // Paso 2: Comparar tipos de unidad utilizando las coincidencias
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
     List<Map<String, dynamic>> resultadosTipoUnidad =
         await compararTipoUnidad(coincidencias);
 
     CustomLogger().logInfo('PROCESANDO RESULTADOS');
     // Paso 3: Procesar los resultados obtenidos
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
     await procesarResultados(resultadosTipoUnidad);
 
     // Opción: Manejo de éxito

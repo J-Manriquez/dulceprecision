@@ -1,3 +1,5 @@
+import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
+import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
 import 'package:flutter/material.dart';
 import 'package:DulcePrecision/database/metodos/productos_metodos.dart'; // Importamos el repositorio
 import 'package:DulcePrecision/models/db_model.dart'; // Importamos el modelo Producto
@@ -97,6 +99,17 @@ class _InsertProductScreenState extends State<InsertarProductosScreen> {
       _precioController.clear();
       _cantidadController.clear();
       _cantidadUnidadController.clear();
+
+
+      // actualiza los costos de los ingredientes y la receta:
+  // await Future.delayed(Duration(seconds: 2));
+  await actualizarCostosAllIngredientes();
+  await calcularCostoCadaRecetas();
+
+  await Future.delayed(Duration(seconds: 1));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Costos de ingredientes y recetas actualizados')));
+
     } catch (e) {
       // En caso de error, mostramos un mensaje
       ScaffoldMessenger.of(context).showSnackBar(

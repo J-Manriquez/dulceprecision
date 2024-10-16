@@ -32,7 +32,7 @@ void main() async {
   }
 
   // Instancia de MetodosRepository
-  MetodosRepository metodosRepository = MetodosRepository();
+  // MetodosRepository metodosRepository = MetodosRepository();
   // Llama a deleteDatabase sin argumentos
   // // ojo cuidado ;-; // //await metodosRepository.eliminarDatabase();
 
@@ -42,25 +42,21 @@ void main() async {
   // O para eliminar una tabla específica, por ejemplo 'ventas'
   // // ojo cuidado ;-; // // await metodosRepository.deleteTable('ventas');
 
+
+  // Llama a la función para insertar los datos en la base de datos
+  await Future.delayed(Duration(seconds: 1));
+  await insertarRepositorio();
+
+  // actualiza los costos de los ingredientes y la receta:
+  // await Future.delayed(Duration(seconds: 2));
+  await actualizarCostosAllIngredientes();
+  await calcularCostoCadaRecetas();
+  
   //Listar las tablas existentes
   // await metodosRepository.listTables();
 
   // mostrar el contenido de una tabla en especifico
-
-  // Llama a la función para insertar los datos en la base de datos
-  await Future.delayed(Duration(seconds: 2));
-  await insertarRepositorio();
-
-  // actualiza los costos de los ingredientes:
-  // await actualizarCostosAllIngredientes();
-  // await calcularCostoCadaRecetas();
-  // await Future.delayed(Duration(seconds: 2));
-  await actualizarCostosAllIngredientes();
-
-  await Future.delayed(Duration(seconds: 2));
-  await calcularCostoCadaRecetas();
-
-  await metodosRepository.getTableContent('recetas');
+  // await metodosRepository.getTableContent('recetas');
   // await metodosRepository.getTableContent('ingredientesRecetas');
 
   runApp(

@@ -1,5 +1,7 @@
 import 'package:DulcePrecision/database/metodos/ingredientes_recetas_mtd.dart';
 import 'package:DulcePrecision/utils/custom_logger.dart';
+import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
+import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:DulcePrecision/database/metodos/recetas_metodos.dart';
@@ -448,7 +450,17 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
       _agregarIngredientesKey.currentState?.limpiarIngredientes();
 
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Receta guardada con éxito')));
+          .showSnackBar(SnackBar(content: Text('Receta guardada')));
+
+      // actualiza los costos de los ingredientes y la receta:
+      // await Future.delayed(Duration(seconds: 2));
+      await actualizarCostosAllIngredientes();
+      await calcularCostoCadaRecetas();
+
+      await Future.delayed(Duration(seconds: 1));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Costos de ingredientes y recetas actualizados')));
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar la receta: $e')),

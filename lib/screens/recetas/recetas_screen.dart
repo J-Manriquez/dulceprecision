@@ -1,5 +1,6 @@
 import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
-import 'package:DulcePrecision/screens/recetas/receta_modals.dart';
+import 'package:DulcePrecision/screens/recetas/modal_detallesCostos.dart';
+import 'package:DulcePrecision/screens/recetas/verReceta_modal.dart';
 import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -121,7 +122,7 @@ class _RecetasScreenState extends State<RecetasScreen> {
                     children: [
                       // Primera fila: Nombre de la receta
                       Text(
-                        'Nombre: ${receta.nombreReceta}',
+                        '${receta.nombreReceta}',
                         style: TextStyle(
                           fontSize: fontSizeModel.textSize,
                           color: themeModel.secondaryTextColor,
@@ -136,24 +137,12 @@ class _RecetasScreenState extends State<RecetasScreen> {
                           // Verifica si el costo de la receta es un número válido o contiene letras
                           if (receta.costoReceta != null) ...[
                             // Expresión regular para verificar si contiene letras
-//                             RegExp(r'[a-zA-Z]').hasMatch(receta.costoReceta!)
-//                                 ? Text(
-//                                     '''Precio:
-// No se puede calcular''',
-//                                     style: TextStyle(
-//                                       fontSize: fontSizeModel.textSize,
-//                                       color: themeModel.secondaryTextColor,
-//                                     ),
-//                                   )
-//                                 : Text(
-//                                     'Precio: \$${receta.costoReceta!}',
-//                                     style: TextStyle(
-//                                       fontSize: fontSizeModel.textSize,
-//                                       color: themeModel.secondaryTextColor,
-//                                     ),
-//                                   ),
+                            // Usa la variable RegExp para definir el texto a mostrar
                             Text(
-                              'Precio: \$${receta.costoReceta!}',
+                              RegExp(r'[a-zA-Z]').hasMatch(receta.costoReceta!)
+                                  ? '''Precio:
+No se puede calcular'''
+                                  : 'Precio: \$${(double.tryParse(receta.costoReceta!) ?? 0.0).round()}',
                               style: TextStyle(
                                 fontSize: fontSizeModel.textSize,
                                 color: themeModel.secondaryTextColor,

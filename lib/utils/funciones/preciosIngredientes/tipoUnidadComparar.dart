@@ -31,7 +31,6 @@ Future<List<Map<String, dynamic>>> compararTipoUnidad(
     double cantidadProductoTransformada =
         producto.cantidadProducto; // Cantidad del producto transformada
     String tipoUnidad; // Tipo de unidad del producto
-    String nombreProductoxId;
 
     // Comparamos los tipos de unidad
     if (producto.tipoUnidadProducto == ingrediente.tipoUnidadIngrediente) {
