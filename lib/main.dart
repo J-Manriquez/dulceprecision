@@ -1,63 +1,22 @@
-import 'package:DulcePrecision/database/dp_db.dart';
-import 'package:DulcePrecision/database/insertar_repositorio.dart';
+import 'package:DulcePrecision/ejecutar2doPlano.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
 import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:DulcePrecision/database/providers/productos_provider.dart';
 import 'package:DulcePrecision/database/providers/recetas_provider.dart';
-import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
-import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/theme_model.dart'; // Importa el modelo de tema
 import 'models/font_size_model.dart'; // Importa el modelo de tamaños de fuente
 import 'screens/home_screen.dart'; // Importa la pantalla principal de inicio
 import 'utils/custom_logger.dart';
-import 'package:DulcePrecision/database/metodos/metodos_db_dp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    CustomLogger().logInfo('Intento de abrir la base de datos y crear tablas');
-    // Inicializamos la base de datos
-    DatabaseHelper databaseHelper =
-        DatabaseHelper(); // Aquí se llama a la base de datos que se inicializa de acuerdo al entorno
-    await databaseHelper
-        .database; // Asegura que la base de datos esté inicializada
-  } catch (e) {
-    CustomLogger().logError('Error al inicializar la base de datos: $e');
-    rethrow; // Asegúrate de lanzar la excepción nuevamente para que pueda ser manejada arriba
-  }
-
-  // Instancia de MetodosRepository
-  // MetodosRepository metodosRepository = MetodosRepository();
-  // Llama a deleteDatabase sin argumentos
-  // // ojo cuidado ;-; // //await metodosRepository.eliminarDatabase();
-
-  // Ejemplo de eliminación de todas las tablas al iniciar la app
-  // // ojo cuidado ;-; // //  await metodosRepository.deleteAllTables();
-
-  // O para eliminar una tabla específica, por ejemplo 'ventas'
-  // // ojo cuidado ;-; // // await metodosRepository.deleteTable('ventas');
-
-
-  // Llama a la función para insertar los datos en la base de datos
-  await Future.delayed(Duration(seconds: 1));
-  await insertarRepositorio();
-
-  // actualiza los costos de los ingredientes y la receta:
-  // await Future.delayed(Duration(seconds: 2));
-  await actualizarCostosAllIngredientes();
-  await calcularCostoCadaRecetas();
-  
-  //Listar las tablas existentes
-  // await metodosRepository.listTables();
-
-  // mostrar el contenido de una tabla en especifico
-  // await metodosRepository.getTableContent('recetas');
-  // await metodosRepository.getTableContent('ingredientesRecetas');
+// ejecutar el Isolate con tareas en 2do plano
+  await runBackgroundTasks(); // Ejecuta las tareas en segundo plano
 
   runApp(
     MultiProvider(
