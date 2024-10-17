@@ -1,4 +1,4 @@
-import 'package:DulcePrecision/ejecutar2doPlano.dart';
+import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ejecutar2doPlano.dart';
 import 'package:DulcePrecision/menus/customNavigationBar.dart';
 import 'package:DulcePrecision/menus/menuProductos.dart';
 import 'package:DulcePrecision/menus/menuRecetas.dart';
@@ -122,7 +122,8 @@ class _MainScreenState extends State<MainScreen> {
       Row(
         children: [
           IconButton(
-            icon: Icon(Icons.add), // Ícono específico para Productos
+            icon: Icon(Icons.add, size: fontSizeModel.iconSize,
+                color:  themeModel.primaryIconColor ), // Ícono específico para Productos
             onPressed: () {
               // Aquí iría la navegación para agregar un nuevo producto
             },
@@ -133,7 +134,8 @@ class _MainScreenState extends State<MainScreen> {
       Row(
         children: [
           IconButton(
-            icon: Icon(Icons.add), // Ícono específico para Ventas
+            icon: Icon(Icons.add, size: fontSizeModel.iconSize,
+                color:  themeModel.primaryIconColor ), 
             onPressed: () {
               // Aquí iría la navegación para agregar una nueva venta
             },
@@ -144,7 +146,8 @@ class _MainScreenState extends State<MainScreen> {
       Row(
         children: [
           IconButton(
-            icon: Icon(Icons.add), // Ícono específico para Recetas
+            icon: Icon(Icons.add, size: fontSizeModel.iconSize,
+                color:  themeModel.primaryIconColor ),
             onPressed: () {
               _navegarAInsertarReceta(context); // Llama al método de navegación
             },

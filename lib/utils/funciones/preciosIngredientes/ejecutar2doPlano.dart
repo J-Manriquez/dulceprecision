@@ -1,7 +1,6 @@
 // background_tasks.dart
 
 import 'package:DulcePrecision/database/dp_db.dart'; // Importa las dependencias necesarias
-import 'package:DulcePrecision/database/insertar_repositorio.dart';
 import 'package:DulcePrecision/utils/custom_logger.dart';
 import 'package:DulcePrecision/utils/funciones/preciosIngredientes/ingredientesCalcularCostos.dart';
 import 'package:DulcePrecision/utils/funciones/preciosRecetas/recetasCalcularCostos.dart';
@@ -18,10 +17,6 @@ Future<void> runBackgroundTasks() async {
     CustomLogger().logError('Error al inicializar la base de datos: $e');
     return; // Termina la ejecución si hay un error
   }
-
-  // Espera 1 segundo antes de insertar datos
-  await Future.delayed(Duration(seconds: 1));
-  await insertarRepositorio(); // Llama a la función para insertar los datos en la base de datos
 
   // Actualiza los costos de los ingredientes y las recetas
   await actualizarCostosAllIngredientes();

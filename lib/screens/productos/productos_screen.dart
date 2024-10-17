@@ -1,3 +1,4 @@
+import 'package:DulcePrecision/database/insertar_repositorio.dart';
 import 'package:flutter/material.dart';
 import 'package:DulcePrecision/screens/productos/agregar_producto_sc.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,8 @@ class _ProductosScreenState extends State<ProductosScreen> {
 
     if (confirmar == true) {
       try {
-        await Provider.of<ProductosProvider>(context, listen: false).eliminarProducto(idProducto);
+        await Provider.of<ProductosProvider>(context, listen: false)
+            .eliminarProducto(idProducto);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Producto eliminado con éxito!')),
         );
@@ -63,7 +65,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
       appBar: AppBar(
         backgroundColor: themeModel.primaryButtonColor,
         title: Text(
-          'Productos',
+          '',
           style: TextStyle(
             fontSize: fontSizeModel.titleSize,
             color: themeModel.primaryTextColor,
@@ -76,13 +78,8 @@ class _ProductosScreenState extends State<ProductosScreen> {
               size: fontSizeModel.iconSize,
               color: themeModel.primaryIconColor,
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InsertarProductosScreen(),
-                ),
-              ).then((_) => productosProvider.obtenerProductos());
+            onPressed: () async {
+              await insertarRepositorio(context);
             },
           ),
         ],
@@ -159,10 +156,11 @@ class _ProductosScreenState extends State<ProductosScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      InsertarProductosScreen(producto: producto),
+                                  builder: (context) => InsertarProductosScreen(
+                                      producto: producto),
                                 ),
-                              ).then((_) => productosProvider.obtenerProductos());
+                              ).then(
+                                  (_) => productosProvider.obtenerProductos());
                             },
                             child: Text(
                               'Editar',

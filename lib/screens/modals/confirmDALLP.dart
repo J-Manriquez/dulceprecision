@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
 
-// DALLR = eliminar todas las recetas
-Future<bool?> mostrarConfirmDALLR(BuildContext context) {
+// DALLP = confirmacion eliminar todos los productos
+Future<bool?> mostrarDALLP(BuildContext context) {
   // Obtenemos los modelos de tema y tamaño de fuente del contexto
   final themeModel = Provider.of<ThemeModel>(context, listen: false);
   final fontSizeModel = Provider.of<FontSizeModel>(context, listen: false);
@@ -40,7 +40,7 @@ Future<bool?> mostrarConfirmDALLR(BuildContext context) {
               SizedBox(height: 10), // Espacio entre el título y el contenido
               Center(
                 child: Text(
-                  '¿Estás seguro de que deseas eliminar todas las recetas?',
+                  '¿Estás seguro de que deseas eliminar todos los productos?',
                   style: TextStyle(
                     fontSize: fontSizeModel
                         .textSize, // Tamaño de fuente del contenido

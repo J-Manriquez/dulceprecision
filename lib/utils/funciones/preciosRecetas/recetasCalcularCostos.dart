@@ -70,12 +70,12 @@ Future<void> calcularCostoCadaRecetas() async {
       String costoRecetaMensaje;
       if (ingredientesConMensaje.isNotEmpty) {
         costoRecetaMensaje =
-            '''Estos ingredientes tienen un mensaje de alerta: \n${ingredientesConMensaje.join("\n")}''';
+            '''Estos ingredientes tienen un mensaje de alerta: \n• ${ingredientesConMensaje.join("\n• ")}''';
         CustomLogger().logInfo(
             'La receta con ID $idReceta contiene ingredientes con mensajes de alerta: ${ingredientesConMensaje.join(', ')}');
       } else if (ingredientesConCostoCero.isNotEmpty) {
         costoRecetaMensaje =
-            "Estos ingredientes no tienen costo: \n${ingredientesConCostoCero.join('\n')}";
+            "Estos ingredientes no tienen costo: \n${ingredientesConCostoCero.join('\n• ')}";
         CustomLogger().logInfo(
             'La receta con ID $idReceta contiene ingredientes con costo 0: ${ingredientesConCostoCero.join('\n')}');
       } else {
@@ -98,7 +98,7 @@ Future<void> calcularCostoCadaRecetas() async {
 
           CustomLogger()
               .logInfo('Receta costo!: ${recetaActualizada.costoReceta}');
-          CustomLogger().logInfo('Receta actualizada con éxito: ${recetaActualizada}');
+          CustomLogger().logInfo('Receta actualizada con éxito: ${recetaActualizada.idReceta} ${recetaActualizada}');
         } catch (e) {
           CustomLogger()
               .logError('Error al actualizar el costo de la receta: $e');

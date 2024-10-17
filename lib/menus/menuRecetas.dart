@@ -1,6 +1,9 @@
 // Importa las dependencias necesarias
 import 'package:DulcePrecision/database/providers/recetas_provider.dart';
+import 'package:DulcePrecision/models/font_size_model.dart';
+import 'package:DulcePrecision/models/theme_model.dart';
 import 'package:DulcePrecision/screens/recetas/modals/confirmDALLR.dart';
+import 'package:DulcePrecision/screens/recetas/recetasOnline/recetasOnline_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:provider/provider.dart'; // Importa la pantalla de configuraciones
@@ -8,46 +11,66 @@ import 'package:provider/provider.dart'; // Importa la pantalla de configuracion
 class MenuRecetas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+        final themeModel = Provider.of<ThemeModel>(context); // Obtenemos el modelo de tema
+    final fontSizeModel = Provider.of<FontSizeModel>(context); // Obtenemos el modelo de tamaño de fuente
+
     return PopupMenuButton<int>(
-  // Ícono de tres puntos verticales que activa el menú
-  icon: Icon(Icons.more_vert),
-  onSelected: (int value) async { // Marcamos la función como asíncrona
-    // Maneja la selección del menú con base en el valor
-    switch (value) {
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SettingsScreen(),
-          ),
-        ); // Navega a la pantalla de configuraciones
-        break;
-      case 2:
-        // Muestra el modal de confirmación y espera la respuesta
-        final confirmacion = await mostrarConfirmacionEliminacion(context);
-        if (confirmacion == true) { // Si el usuario confirma la eliminación
-          try {
-            // Llamamos al método para eliminar todo el contenido de la tabla 'recetas'
-            // await recetasProvider.eliminarContenidoTablaRecetas();
-            // Supongamos que tienes un botón o acción que llama a este método
-            await Provider.of<RecetasProvider>(context, listen: false).eliminarContenidoTablaRecetas();
+      // Ícono de tres puntos verticales que activa el menú
+      icon: Icon(Icons.more_vert, color: themeModel.primaryIconColor, size: fontSizeModel.iconSize,),
+      onSelected: (int value) async {
+        // Marcamos la función como asíncrona
+        // Maneja la selección del menú con base en el valor
+        switch (value) {
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsScreen(),
+              ),
+            ); // Navega a la pantalla de configuraciones
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecetarioOnlineScreen(),
+              ),
+            ); // Navega a la pantalla de configuraciones
+            break;
+          case 3:
+            // Muestra el modal de confirmación y espera la respuesta
+            final confirmacion = await mostrarConfirmDALLR(context);
+            if (confirmacion == true) {
+              // Si el usuario confirma la eliminación
+              try {
+                // Llamamos al método para eliminar todo el contenido de la tabla 'recetas'
+                // await recetasProvider.eliminarContenidoTablaRecetas();
+                // Supongamos que tienes un botón o acción que llama a este método
+                await Provider.of<RecetasProvider>(context, listen: false)
+                    .eliminarContenidoTablaRecetas();
 
-            // Muestra un mensaje de éxito si es necesario
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Todas las recetas han sido eliminadas.')),
-            );
-          } catch (e) {
-            // Manejo del error
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error al eliminar las recetas: $e')),
-            );
-          }
+                // Muestra un mensaje de éxito si es necesario
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Todas las recetas han sido eliminadas.')),
+                );
+              } catch (e) {
+                // Manejo del error
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error al eliminar las recetas: $e')),
+                );
+              }
+            }
+            break;
         }
-        break;
-    }
-  },
+      },
 
-  itemBuilder: (BuildContext context) {
+      itemBuilder: (BuildContext context) {
+        final themeModel =
+            Provider.of<ThemeModel>(context); // Obtenemos el modelo de tema
+        final fontSizeModel = Provider.of<FontSizeModel>(
+            context); // Obtenemos el modelo de tamaño de fuente
+
         // Construye las opciones del menú flotante
         return <PopupMenuEntry<int>>[
           PopupMenuItem<int>(
@@ -55,19 +78,21 @@ class MenuRecetas extends StatelessWidget {
             child: Text(
               'Evolucion de recetas',
               style: TextStyle(
-                fontSize: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.fontSize, // Tamaño de fuente del texto
-                color: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.color, // Color de texto según el tema
-              ),
+                  fontSize: fontSizeModel.iconSize,
+                  color: themeModel.secondaryIconColor),
             ),
           ),
           PopupMenuItem<int>(
             value: 2, // Valor que se pasa al onSelected cuando se selecciona
+            child: Text(
+              'Recetario online',
+              style: TextStyle(
+                  fontSize: fontSizeModel.iconSize,
+                  color: themeModel.secondaryIconColor),
+            ),
+          ),
+          PopupMenuItem<int>(
+            value: 3, // Valor que se pasa al onSelected cuando se selecciona
             child: Text(
               'Borrar todas las recetas',
               style: TextStyle(

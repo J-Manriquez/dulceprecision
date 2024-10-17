@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:DulcePrecision/models/theme_model.dart';
 import 'package:DulcePrecision/models/font_size_model.dart';
 
-class ConfirmDialog {
-  // BAER = back desde agregar/editar receta
-  static Future<bool> verConfirmacionBAER(BuildContext context) async {
+// ARO: agregar receta online
+class ConfirmARO {
+  // Método para mostrar el modal de confirmación al agregar una receta
+  static Future<bool> mostrarConfirmacionAgregarReceta(BuildContext context) async {
     final themeModel = Provider.of<ThemeModel>(context, listen: false);
     final fontSizeModel = Provider.of<FontSizeModel>(context, listen: false);
 
@@ -24,7 +25,7 @@ class ConfirmDialog {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Conservar receta',
+                      'Agregar receta',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: fontSizeModel.titleSize,
@@ -34,8 +35,7 @@ class ConfirmDialog {
                     SizedBox(height: 10),
                     Center(
                       child: Text(
-                        '''No se aplicarán cambios a la receta 
-¿Está seguro de que desea volver sin guardar?''',
+                        '¿Está seguro de que desea agregar esta receta?',
                         style: TextStyle(
                           fontSize: fontSizeModel.textSize,
                           color: themeModel.primaryTextColor,
@@ -88,6 +88,4 @@ class ConfirmDialog {
         ) ??
         false; // Retorna false si se cierra sin selección
   }
-
-  static mostrarConfirmacionAgregarReceta(BuildContext context) {}
 }
