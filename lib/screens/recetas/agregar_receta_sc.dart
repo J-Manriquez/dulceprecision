@@ -167,6 +167,11 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
                     if (confirm) {
                       await restaurarReceta(widget.receta!.idReceta!);
                       Navigator.of(context).pop();
+                      if (mounted) {
+                        // Verificamos si el widget sigue montado antes de acceder al contexto
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('No se guardaron los cambios')));
+                      }
                     }
                   } else {
                     Navigator.of(context).pop();
@@ -314,9 +319,12 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
     final recetaRepo = RecetaRepository();
 
     if (_nombreController.text.isEmpty || _descripcionController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor, completa todos los campos.')),
-      );
+      if (mounted) {
+        // Verificamos si el widget sigue montado antes de acceder al contexto
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Por favor, completa todos los campos.')),
+        );
+      }
       return;
     }
 
@@ -349,26 +357,30 @@ class _InsertarRecetasScreenState extends State<InsertarRecetasScreen> {
             id, ingredientesEditados, nuevosIngredientes);
       }
 
+      // Limpiar controladores y estados de widgets
       _nombreController.clear();
       _descripcionController.clear();
       _editarIngredientesKey.currentState?.limpiarIngredientes();
       _agregarIngredientesKey.currentState?.limpiarIngredientes();
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Receta guardada')));
-
-      // actualiza los costos de los ingredientes y la receta:
-      // await Future.delayed(Duration(seconds: 2));
+      // Actualizar costos de ingredientes y recetas
       await actualizarCostosAllIngredientes();
       await calcularCostoCadaRecetas();
 
-      await Future.delayed(Duration(seconds: 1));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Costos de ingredientes y recetas actualizados')));
+      if (mounted) {
+        // Verificamos si el widget sigue montado antes de acceder al contexto
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Receta guardada')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Costos de ingredientes y recetas actualizados')));
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar la receta: $e')),
-      );
+      if (mounted) {
+        // Verificamos si el widget sigue montado antes de acceder al contexto
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al guardar la receta: $e')),
+        );
+      }
     }
   }
 }

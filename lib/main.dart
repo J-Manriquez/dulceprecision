@@ -1,6 +1,11 @@
 import 'package:DulcePrecision/ejecutar2doPlano.dart';
+import 'package:DulcePrecision/menus/customNavigationBar.dart';
+import 'package:DulcePrecision/menus/menuProductos.dart';
+import 'package:DulcePrecision/menus/menuRecetas.dart';
+import 'package:DulcePrecision/menus/menuVentas.dart';
+import 'package:DulcePrecision/menus/principal_menu.dart';
+import 'package:DulcePrecision/screens/recetas/agregar_receta_sc.dart';
 import 'package:DulcePrecision/screens/recetas/recetas_screen.dart';
-import 'package:DulcePrecision/screens/settings_screen.dart';
 import 'package:DulcePrecision/screens/productos/productos_screen.dart';
 import 'package:DulcePrecision/database/providers/ingredientes_provider.dart';
 import 'package:DulcePrecision/database/providers/productos_provider.dart';
@@ -69,8 +74,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 1; // Índice seleccionado inicialmente (1 = HomeScreen)
   final List<Widget> _pages = [];
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // Clave global para controlar el Scaffold
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Clave global para controlar el Scaffold
+
+  // Lista de títulos que se mostrarán en el AppBar y Drawer
+  final List<String> _pageTitles = [
+    'Productos',
+    'Ventas',
+    'Recetas',
+  ];
 
   @override
   void initState() {
@@ -84,23 +95,69 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex = index; // Actualiza el índice seleccionado
+    });
+  }
+
+  // Método para navegar a InsertarRecetasScreen
+  void _navegarAInsertarReceta(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InsertarRecetasScreen(),
+      ),
+    ).then((_) {
+      // Luego de regresar, actualiza la lista de recetas
+      Provider.of<RecetasProvider>(context, listen: false).obtenerRecetas();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeModel =
-        Provider.of<ThemeModel>(context); // Obtenemos el modelo de tema
-    final fontSizeModel = Provider.of<FontSizeModel>(
-        context); // Obtenemos el modelo de tamaño de fuente
+    final themeModel = Provider.of<ThemeModel>(context); // Obtenemos el modelo de tema
+    final fontSizeModel = Provider.of<FontSizeModel>(context); // Obtenemos el modelo de tamaño de fuente
+
+    // Actualizamos _floatingMenus para usar el método de navegación
+    final List<Widget> _floatingMenus = [
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add), // Ícono específico para Productos
+            onPressed: () {
+              // Aquí iría la navegación para agregar un nuevo producto
+            },
+          ),
+          MenuProductos(), // Menú flotante para Productos
+        ],
+      ),
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add), // Ícono específico para Ventas
+            onPressed: () {
+              // Aquí iría la navegación para agregar una nueva venta
+            },
+          ),
+          MenuVentas(), // Menú flotante para Ventas
+        ],
+      ),
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.add), // Ícono específico para Recetas
+            onPressed: () {
+              _navegarAInsertarReceta(context); // Llama al método de navegación
+            },
+          ),
+          MenuRecetas(), // Menú flotante para Recetas
+        ],
+      ),
+    ];
 
     return Scaffold(
       key: _scaffoldKey, // Asigna el Scaffold al GlobalKey
       appBar: AppBar(
-        backgroundColor:
-            themeModel.primaryButtonColor, // Color dinámico para el AppBar
-        // Personaliza el ícono de menú (drawer) con el tamaño que quieras
+        backgroundColor: themeModel.primaryButtonColor, // Color dinámico para el AppBar
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -113,141 +170,27 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
         title: Text(
-          'Dulce Precisión',
+          _pageTitles[_selectedIndex], // Cambia el título según la pantalla seleccionada
           style: TextStyle(
-            fontSize:
-                fontSizeModel.titleSize, // Tamaño dinámico del texto del título
+            fontSize: fontSizeModel.titleSize, // Tamaño dinámico del texto del título
             color: themeModel.primaryTextColor, // Color dinámico del texto
           ),
         ),
+        actions: <Widget>[
+          _floatingMenus[_selectedIndex], // Cambia el menú flotante e ícono según la pantalla seleccionada
+        ],
       ),
-      drawer: Drawer(
-        backgroundColor:
-            themeModel.backgroundColor, // Color dinámico para el Drawer
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: themeModel
-                    .primaryButtonColor, // Color dinámico en el header del Drawer
-              ),
-              child: Row(
-                // Alineación horizontal de los elementos dentro de la fila
-                mainAxisAlignment: MainAxisAlignment
-                    .start, // Centra horizontalmente el contenido
-                // Alineación vertical de los elementos dentro de la fila
-                crossAxisAlignment: CrossAxisAlignment
-                    .start, // Centra verticalmente el contenido
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back,
-                        color: themeModel.primaryIconColor),
-                    iconSize:
-                        fontSizeModel.iconSize, // Tamaño dinámico del ícono
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Cierra el Drawer
-                    },
-                  ),
-                  SizedBox(width: 8), // Espacio entre el ícono y el texto
-                  Text(
-                    'Menú principal',
-                    style: TextStyle(
-                      color: themeModel
-                          .primaryTextColor, // Color dinámico del texto
-                      fontSize:
-                          fontSizeModel.titleSize, // Tamaño dinámico del texto
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings,
-                  size: fontSizeModel.iconSize,
-                  color: themeModel
-                      .secondaryIconColor), // Ícono con tamaño dinámico
-              title: Text(
-                'Configuraciones',
-                style: TextStyle(
-                  color:
-                      themeModel.secondaryTextColor, // Color dinámico del texto
-                  fontSize: fontSizeModel.textSize, // Tamaño dinámico del texto
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const SettingsScreen()), // Navega a SettingsScreen
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.info,
-                  size: fontSizeModel.iconSize,
-                  color: themeModel
-                      .secondaryIconColor), // Ícono con tamaño dinámico
-              title: Text(
-                'Acerca de',
-                style: TextStyle(
-                  color:
-                      themeModel.secondaryTextColor, // Color dinámico del texto
-                  fontSize: fontSizeModel.textSize, // Tamaño dinámico del texto
-                ),
-              ),
-              onTap: () {
-                // Implementa la navegación a la pantalla "Acerca de"
-              },
-            ),
-          ],
-        ),
+      drawer: PrincipalMenu(
+        pageTitles: _pageTitles, // Pasa la lista de títulos al CustomDrawer
+        selectedIndex: _selectedIndex, // Pasa el índice seleccionado al CustomDrawer
       ),
       body: Container(
-        color: themeModel.backgroundColor, // Color de fondo dinámico
-        child: _pages[
-            _selectedIndex], // Cambia la página según el índice seleccionado
+        color: themeModel.backgroundColor,
+        child: _pages[_selectedIndex],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_business,
-                size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'Productos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.show_chart,
-                size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'Ventas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant,
-                size: fontSizeModel.iconSize), // Ícono con tamaño dinámico
-            label: 'Recetas',
-          ),
-        ],
-        currentIndex: _selectedIndex, // Índice seleccionado
-        selectedItemColor: themeModel
-            .secondaryButtonColor, // Color dinámico del ítem seleccionado
-        unselectedItemColor:
-            themeModel.primaryIconColor, // Color para ítems no seleccionados
-        backgroundColor:
-            themeModel.primaryButtonColor, // Color de fondo dinámico
-        showUnselectedLabels: true,
-        // Modifica el tamaño del texto de los labels
-        selectedLabelStyle: TextStyle(
-          fontSize:
-              fontSizeModel.textSize, // Tamaño dinámico del texto seleccionado
-          color: themeModel.secondaryIconColor, // Color del texto seleccionado
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: fontSizeModel.textSize -
-              2, // Tamaño dinámico del texto no seleccionado
-          color: themeModel.primaryIconColor, // Color del texto no seleccionado
-        ),
-        onTap:
-            _onItemTapped, // Método que se llama cuando se selecciona un ítem
+      bottomNavigationBar: CustomNavigationBar(
+        selectedIndex: _selectedIndex, // Pasa el índice seleccionado al CustomBottomNavigationBar
+        onItemTapped: _onItemTapped, // Pasa la función de callback para el cambio de índice
       ),
     );
   }
