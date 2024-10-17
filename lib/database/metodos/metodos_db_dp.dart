@@ -97,4 +97,25 @@ class MetodosRepository {
   }
 }
 
+/// Método para eliminar todo el contenido de una tabla específica
+  Future<void> deleteTableContent(String tableName) async {
+    // custom info para mostrar nombre tabla
+    CustomLogger().logInfo('Eliminando contenido de la tabla: $tableName');
+
+    try {
+      final db = await DatabaseHelper().database; // Obtenemos la instancia de la base de datos
+
+      // Ejecutamos la consulta para eliminar todos los registros de la tabla especificada
+      await db.delete(
+        tableName, // Nombre de la tabla de la que queremos eliminar el contenido
+      );
+
+      // Log de éxito
+      CustomLogger().logInfo('Contenido de la tabla $tableName eliminado correctamente');
+    } catch (e) {
+      // Log de error en caso de fallos
+      CustomLogger().logError('Error al eliminar el contenido de la tabla $tableName: $e');
+    }
+  }
+
 }
